@@ -112,7 +112,7 @@ public class CompletionistBannerBlock extends BaseEntityBlock {
     }
 
     public ResourceLocation getRenderTexture() {
-        return new HerbalBrewsIdentifier("textures/banner/herbalbrews_banner.png");
+        return HerbalBrewsIdentifier.identifier("textures/banner/herbalbrews_banner.png");
     }
 
     @Override

@@ -2,6 +2,7 @@ package net.satisfy.herbalbrews.core.blocks;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
@@ -11,6 +12,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
+import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -36,11 +39,11 @@ public class TeaCupBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
-        if (stack.hasTag()) {
+        if (stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
-                assert stack.getTag() != null;
-                CompoundTag tag = stack.getTag().copy();
+                assert stack.get(DataComponents.BLOCK_ENTITY_DATA) != null;
+                CompoundTag tag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
                 drinkBlockEntity.setStoredNbt(tag);
                 blockEntity.setChanged();
             }
@@ -75,7 +78,7 @@ public class TeaCupBlock extends Block implements EntityBlock {
             if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
                 ItemStack stack = new ItemStack(this);
                 if (drinkBlockEntity.getStoredNbt() != null && !drinkBlockEntity.getStoredNbt().isEmpty()) {
-                    stack.setTag(drinkBlockEntity.getStoredNbt().copy());
+                    stack.get(DataComponents.BLOCK_ENTITY_DATA).update(compoundTag -> drinkBlockEntity.getStoredNbt().copy());
                 }
                 popResource(world, pos, stack);
             }

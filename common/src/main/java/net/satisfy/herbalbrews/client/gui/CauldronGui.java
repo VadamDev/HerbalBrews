@@ -11,7 +11,7 @@ import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
 import org.joml.Vector2i;
 
 public class CauldronGui extends AbstractContainerScreen<CauldronGuiHandler> {
-    private static final ResourceLocation BACKGROUND = new HerbalBrewsIdentifier("textures/gui/cauldron.png");
+    private static final ResourceLocation BACKGROUND = HerbalBrewsIdentifier.identifier("textures/gui/cauldron.png");
     private static final int PROGRESS_X = 114;
     private static final int PROGRESS_Y = 38;
     private static final int PROGRESS_WIDTH = 11;

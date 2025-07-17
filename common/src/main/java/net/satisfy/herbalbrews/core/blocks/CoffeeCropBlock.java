@@ -5,6 +5,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -49,19 +50,19 @@ public class CoffeeCropBlock extends CropBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        int i = state.getValue(AGE);
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        int i = blockState.getValue(AGE);
         boolean bl = i == 3;
-        if (!bl && player.getItemInHand(hand).is(Items.BONE_MEAL)) {
-            return InteractionResult.PASS;
+        if (!bl && player.getItemInHand(interactionHand).is(Items.BONE_MEAL)) {
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         } else if (i > 1) {
-            int tomatoCount = world.random.nextInt(2) + (bl ? 1 : 0);
-            popResource(world, pos, new ItemStack(ObjectRegistry.COFFEE_BEANS.get(), tomatoCount));
-            world.playSound(null, pos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + world.random.nextFloat() * 0.4F);
-            world.setBlock(pos, state.setValue(AGE, 1), 2);
-            return InteractionResult.sidedSuccess(world.isClientSide);
+            int tomatoCount = level.random.nextInt(2) + (bl ? 1 : 0);
+            popResource(level, blockPos, new ItemStack(ObjectRegistry.COFFEE_BEANS.get(), tomatoCount));
+            level.playSound(null, blockPos, SoundEvents.SWEET_BERRY_BUSH_PICK_BERRIES, SoundSource.BLOCKS, 1.0F, 0.8F + level.random.nextFloat() * 0.4F);
+            level.setBlock(blockPos, blockState.setValue(AGE, 1), 2);
+            return ItemInteractionResult.sidedSuccess(level.isClientSide);
         } else {
-            return super.use(state, world, pos, player, hand, hit);
+            return super.useItemOn(itemStack, blockState, level, blockPos, player, interactionHand, blockHitResult);
         }
     }
 }

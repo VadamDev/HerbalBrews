@@ -23,7 +23,7 @@ public class JugItem extends BlockItem {
     private final Multimap<Attribute, AttributeModifier> toolAttributes;
 
     public JugItem(Block block, Properties properties) {
-        super(block, properties.defaultDurability(GLASS_TIER.getUses()));
+        super(block, properties.durability(GLASS_TIER.getUses()));
         float attackDamage = 8F + GLASS_TIER.getAttackDamageBonus();
         ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
         builder.put(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_UUID, "Tool modifier", -2F, AttributeModifier.Operation.ADDITION));

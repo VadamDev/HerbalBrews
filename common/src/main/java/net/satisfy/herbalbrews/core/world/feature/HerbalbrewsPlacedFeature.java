@@ -14,7 +14,7 @@ public class HerbalbrewsPlacedFeature {
     public static final ResourceKey<PlacedFeature> COFFEE_PLANT_PATCH_CHANCE_KEY = registerKey("coffee_patch_chance");
 
     public static ResourceKey<PlacedFeature> registerKey(String name) {
-        return ResourceKey.create(Registries.PLACED_FEATURE, new HerbalBrewsIdentifier(name));
+        return ResourceKey.create(Registries.PLACED_FEATURE, HerbalBrewsIdentifier.identifier(name));
     }
 }
 

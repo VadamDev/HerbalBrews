@@ -10,7 +10,9 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -71,14 +73,14 @@ public class JugBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public @NotNull InteractionResult use(BlockState state, Level world, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (world.isClientSide) {
-            return InteractionResult.SUCCESS;
+    protected ItemInteractionResult useItemOn(ItemStack itemStack, BlockState blockState, Level level, BlockPos blockPos, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult) {
+        if (level.isClientSide) {
+            return ItemInteractionResult.SUCCESS;
         }
-        ItemStack heldItem = player.getItemInHand(hand);
-        BlockEntity blockEntity = world.getBlockEntity(pos);
+        ItemStack heldItem = player.getItemInHand(interactionHand);
+        BlockEntity blockEntity = level.getBlockEntity(blockPos);
         if (!(blockEntity instanceof JugBlockEntity jug)) {
-            return InteractionResult.PASS;
+            return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (heldItem.getItem() instanceof DrinkBlockItem) {
             if (jug.getDrinks().size() < 3) {
@@ -87,28 +89,28 @@ public class JugBlock extends Block implements EntityBlock {
                 jug.addDrink(drinkToAdd);
                 heldItem.shrink(1);
                 int fillStage = jug.getDrinks().size();
-                world.setBlock(pos, state.setValue(FILL_STAGE, fillStage), 3);
-                world.playSound(null, pos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
-                return InteractionResult.SUCCESS;
+                level.setBlock(blockPos, blockState.setValue(FILL_STAGE, fillStage), 3);
+                level.playSound(null, blockPos, SoundEvents.BOTTLE_FILL, SoundSource.BLOCKS, 1.0f, 1.0f);
+                return ItemInteractionResult.SUCCESS;
             } else {
-                return InteractionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             }
         } else {
             if (!jug.getDrinks().isEmpty()) {
                 int duration = PlatformHelper.getJugEffectDuration();
                 jug.applyEffects(player, duration);
                 jug.clearDrinks();
-                world.setBlock(pos, state.setValue(FILL_STAGE, 0), 3);
-                world.playSound(null, pos, SoundEvents.HONEY_DRINK, SoundSource.BLOCKS, 1.0f, 1.0f);
-                return InteractionResult.SUCCESS;
+                level.setBlock(blockPos, blockState.setValue(FILL_STAGE, 0), 3);
+                level.playSound(null, blockPos, SoundEvents.HONEY_DRINK, SoundSource.BLOCKS, 1.0f, 1.0f);
+                return ItemInteractionResult.SUCCESS;
             } else {
-                return InteractionResult.FAIL;
+                return ItemInteractionResult.FAIL;
             }
         }
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, BlockGetter world, List<Component> tooltip, TooltipFlag tooltipContext) {
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag tooltipFlag) {
         if (Screen.hasShiftDown()) {
             tooltip.add(Component.translatable("tooltip.herbalbrews.description.title").withStyle(style -> style.withColor(TextColor.fromRgb(0x4CAF50)).withBold(true)));
             tooltip.add(Component.translatable("tooltip.herbalbrews.description.jug_1").withStyle(style -> style.withColor(TextColor.fromRgb(0x4CAF50)).withItalic(false)));
@@ -119,7 +121,6 @@ public class JugBlock extends Block implements EntityBlock {
             tooltip.add(Component.translatable("tooltip.herbalbrews.canbeplaced").withStyle(style -> style.withColor(TextColor.fromRgb(0xCD7F32)).withItalic(true)));
         }
     }
-
 
     @Override
     public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {

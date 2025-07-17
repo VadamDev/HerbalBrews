@@ -7,12 +7,16 @@ import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -32,11 +36,11 @@ public class HerbalBrewsUtil {
     }
 
     public static <T extends Block> RegistrySupplier<T> registerWithoutItem(DeferredRegister<Block> register, Registrar<Block> registrar, ResourceLocation path, Supplier<T> block) {
-        return Platform.isForge() ? register.register(path.getPath(), block) : registrar.register(path, block);
+        return Platform.isNeoForge() ? register.register(path.getPath(), block) : registrar.register(path, block);
     }
 
     public static <T extends Item> RegistrySupplier<T> registerItem(DeferredRegister<Item> register, Registrar<Item> registrar, ResourceLocation path, Supplier<T> itemSupplier) {
-        return Platform.isForge() ? register.register(path.getPath(), itemSupplier) : registrar.register(path, itemSupplier);
+        return Platform.isNeoForge() ? register.register(path.getPath(), itemSupplier) : registrar.register(path, itemSupplier);
     }
 
     public static VoxelShape rotateShape(Direction from, Direction to, VoxelShape shape) {
@@ -95,5 +99,9 @@ public class HerbalBrewsUtil {
         } while(matches);
 
         return false;
+    }
+
+    public static boolean hasFrostWalker(LivingEntity entity) {
+        return entity.getItemBySlot(EquipmentSlot.FEET).get(DataComponents.ENCHANTMENTS).equals(Enchantments.FROST_WALKER);
     }
 }

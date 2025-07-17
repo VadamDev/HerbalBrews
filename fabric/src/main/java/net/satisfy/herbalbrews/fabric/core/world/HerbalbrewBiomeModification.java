@@ -13,7 +13,7 @@ import java.util.function.Predicate;
 public class HerbalbrewBiomeModification {
 
     public static void init() {
-        BiomeModification world = BiomeModifications.create(new HerbalBrewsIdentifier("world_features"));
+        BiomeModification world = BiomeModifications.create(HerbalBrewsIdentifier.identifier("world_features"));
         Predicate<BiomeSelectionContext> jungleBiomes = getHerbalbrewsSelector("jungle_biomes");
         Predicate<BiomeSelectionContext> savannaBiomes = getHerbalbrewsSelector("savanna_biomes");
         Predicate<BiomeSelectionContext> mountainBiomes = getHerbalbrewsSelector("mountain_biomes");
@@ -25,6 +25,6 @@ public class HerbalbrewBiomeModification {
     }
 
     private static Predicate<BiomeSelectionContext> getHerbalbrewsSelector(String path) {
-        return BiomeSelectors.tag(TagKey.create(Registries.BIOME, new HerbalBrewsIdentifier(path)));
+        return BiomeSelectors.tag(TagKey.create(Registries.BIOME, HerbalBrewsIdentifier.identifier(path)));
     }
 }

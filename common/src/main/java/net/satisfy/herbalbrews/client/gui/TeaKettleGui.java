@@ -11,7 +11,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
 public class TeaKettleGui extends AbstractContainerScreen<TeaKettleGuiHandler> {
-    private static final ResourceLocation BACKGROUND = new HerbalBrewsIdentifier("textures/gui/tea_kettle.png");
+    private static final ResourceLocation BACKGROUND = HerbalBrewsIdentifier.identifier("textures/gui/tea_kettle.png");
     private static final int ARROW_X = 54;
     private static final int ARROW_Y = 22;
     private static final int ARROW_WIDTH = 24;

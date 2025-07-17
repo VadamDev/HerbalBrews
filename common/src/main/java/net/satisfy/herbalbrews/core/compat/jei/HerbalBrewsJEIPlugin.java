@@ -44,7 +44,7 @@ public class HerbalBrewsJEIPlugin implements IModPlugin {
 
     @Override
     public @NotNull ResourceLocation getPluginUid() {
-        return new HerbalBrewsIdentifier("jei_plugin");
+        return HerbalBrewsIdentifier.identifier("jei_plugin");
     }
 
     @Override
