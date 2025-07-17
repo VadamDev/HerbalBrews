@@ -26,7 +26,7 @@ public class EntityTypeRegistry {
 
 
     private static <T extends BlockEntityType<?>> RegistrySupplier<T> registerBlockEntity(String name, final Supplier<T> type) {
-        return BLOCK_ENTITY_TYPES.register(new HerbalBrewsIdentifier(name), type);
+        return BLOCK_ENTITY_TYPES.register(HerbalBrewsIdentifier.identifier(name), type);
     }
 
     public static void init() {

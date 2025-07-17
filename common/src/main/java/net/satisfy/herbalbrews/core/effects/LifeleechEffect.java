@@ -19,7 +19,7 @@ public class LifeleechEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity instanceof Player player && player.isAlive()) {
             Level world = player.level();
             List<Player> nearbyPlayers = world.getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(RADIUS), this::isAffectedEntity);
@@ -35,6 +35,7 @@ public class LifeleechEffect extends MobEffect {
                 transferHealth(player);
             }
         }
+        return super.applyEffectTick(entity, amplifier);
     }
 
     private int calculateFinalAmplifier(int playerCount) {
@@ -73,7 +74,7 @@ public class LifeleechEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int j) {
         return true;
     }
 }

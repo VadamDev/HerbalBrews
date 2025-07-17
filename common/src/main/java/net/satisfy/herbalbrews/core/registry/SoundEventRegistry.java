@@ -18,7 +18,7 @@ public class SoundEventRegistry {
     public static void init() {}
 
     private static RegistrySupplier<SoundEvent> create() {
-        ResourceLocation id = new HerbalBrewsIdentifier("tea_kettle_boiling");
+        ResourceLocation id = HerbalBrewsIdentifier.identifier("tea_kettle_boiling");
         return SOUND_EVENTS.register(id, () -> SoundEvent.createVariableRangeEvent(id));
     }
 }

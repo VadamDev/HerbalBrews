@@ -1,5 +1,6 @@
 package net.satisfy.herbalbrews.core.items;
 
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -20,8 +21,8 @@ import java.util.List;
 public class HatItem extends ArmorItem {
     private final ResourceLocation hatTexture;
 
-    public HatItem(ArmorMaterial armorMaterial, Type type, Properties properties, ResourceLocation hatTexture) {
-        super(armorMaterial, type, properties);
+    public HatItem(Holder<ArmorMaterial> holder, Type type, Properties properties, ResourceLocation hatTexture) {
+        super(holder, type, properties);
         this.hatTexture = hatTexture;
     }
 
@@ -46,11 +47,11 @@ public class HatItem extends ArmorItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, Level level, List<Component> tooltip, TooltipFlag flag) {
+    public void appendHoverText(ItemStack itemStack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag tooltipFlag) {
         if (PlatformHelper.isHatDamageReductionEnabled()) {
             int reductionAmount = PlatformHelper.getHatDamageReductionAmount();
             Component magicDamage = Component.translatable("tooltip.herbalbrews.magic_damage")
-                    .setStyle(Style.EMPTY.withColor(TextColor.parseColor("#AA00FF")));
+                    .setStyle(Style.EMPTY.withColor(TextColor.parseColor("#AA00FF").getOrThrow()));
             Component damageReduction = Component.translatable("tooltip.herbalbrews.damage_reduction", magicDamage, reductionAmount + "%");
             tooltip.add(damageReduction);
         }

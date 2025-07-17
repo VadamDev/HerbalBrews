@@ -71,7 +71,7 @@ public class DeeprushEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int j) {
         return true;
     }
 }

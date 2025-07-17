@@ -16,7 +16,7 @@ public class BondingEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity instanceof Player player && player.isAlive()) {
             Level world = player.level();
             double radius = 10.0;
@@ -33,6 +33,7 @@ public class BondingEffect extends MobEffect {
                         });
             }
         }
+        return super.applyEffectTick(entity, amplifier);
     }
 
     private int calculateFinalAmplifier(int playerCount) {
@@ -51,7 +52,7 @@ public class BondingEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int j) {
         return true;
     }
 }

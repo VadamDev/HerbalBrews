@@ -15,7 +15,7 @@ public class ToughEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity instanceof Player player && isAffectedEntity(player)) {
             Level world = player.level();
             double radius = 10.0;
@@ -28,6 +28,7 @@ public class ToughEffect extends MobEffect {
                 player.addEffect(new MobEffectInstance(MobEffects.DAMAGE_RESISTANCE, 40, finalAmplifier, false, false, false));
             }
         }
+        return super.applyEffectTick(entity, amplifier);
     }
 
     private int calculateFinalAmplifier(int playerCount) {
@@ -46,7 +47,7 @@ public class ToughEffect extends MobEffect {
     }
 
     @Override
-    public boolean isDurationEffectTick(int duration, int amplifier) {
+    public boolean shouldApplyEffectTickThisTick(int duration, int j) {
         return duration % 100 == 0;
     }
 }

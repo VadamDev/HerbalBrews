@@ -27,10 +27,10 @@ public class EffectRegistry {
 
 
     private static RegistrySupplier<MobEffect> registerEffect(String name, Supplier<MobEffect> effect) {
-        if (Platform.isForge()) {
+        if (Platform.isNeoForge()) {
             return MOB_EFFECTS.register(name, effect);
         }
-        return MOB_EFFECTS_REGISTRAR.register(new HerbalBrewsIdentifier(name), effect);
+        return MOB_EFFECTS_REGISTRAR.register(HerbalBrewsIdentifier.identifier(name), effect);
     }
 
     public static void init() {
