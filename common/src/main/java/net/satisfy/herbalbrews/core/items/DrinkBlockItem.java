@@ -60,7 +60,7 @@ public class DrinkBlockItem extends BlockItem {
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level world, List<Component> tooltip, TooltipFlag context) {
+    public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag context) {
         CompoundTag tag = stack.getTag();
         if (tag != null && tag.contains("Effect") && tag.contains("EffectDuration")) {
             ResourceLocation effectId = new ResourceLocation(tag.getString("Effect"));

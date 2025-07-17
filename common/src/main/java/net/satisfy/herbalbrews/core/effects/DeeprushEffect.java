@@ -18,7 +18,7 @@ public class DeeprushEffect extends MobEffect {
     }
 
     @Override
-    public void applyEffectTick(LivingEntity entity, int amplifier) {
+    public boolean applyEffectTick(LivingEntity entity, int amplifier) {
         if (entity instanceof Player player && player.isAlive()) {
             Level world = player.level();
             List<Player> nearbyPlayers = world.getEntitiesOfClass(Player.class, player.getBoundingBox().inflate(RADIUS), this::isAffectedEntity);
@@ -31,6 +31,7 @@ public class DeeprushEffect extends MobEffect {
                         .forEach(p -> applyDigSpeedEffect(p, finalAmplifier));
             }
         }
+        return super.applyEffectTick(entity, amplifier);
     }
 
     private int calculateFinalAmplifier(int y, int playerCount) {
