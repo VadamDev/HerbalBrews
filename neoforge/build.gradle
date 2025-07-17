@@ -1,24 +1,20 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "8.0.0"
 }
 
 architectury {
     platformSetupLoomIde()
-    forge()
+    neoForge()
 }
 
-def jarFileName = 'letsdo-herbalbrews-forge'
+def jarFileName = 'letsdo-herbalbrews-neoforge'
 
 archivesBaseName = jarFileName
 
 loom {
     accessWidenerPath = project(":common").loom.accessWidenerPath
 
-    forge {
-        convertAccessWideners = true
-        extraAccessWideners.add loom.accessWidenerPath.get().asFile.name
-
-        mixinConfig "herbalbrews-forge.mixins.json"
+    neoForge {
     }
 }
 
@@ -27,7 +23,7 @@ configurations {
     shadowCommon
     compileClasspath.extendsFrom common
     runtimeClasspath.extendsFrom common
-    developmentForge.extendsFrom common
+    developmentNeoForge.extendsFrom common
 }
 
 repositories {
@@ -37,20 +33,21 @@ repositories {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    modApi "dev.architectury:architectury-forge:${rootProject.architectury_version}"
-    modImplementation "me.shedaniel:RoughlyEnoughItems-forge:$rei_version"
+    neoForge "net.neoforged:neoforge:${rootProject.forge_version}"
+    modApi "dev.architectury:architectury-neoforge:${rootProject.architectury_version}"
+    modImplementation "me.shedaniel:RoughlyEnoughItems-neoforge:$rei_version"
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
-    shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
+    shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 }
 
+tasks.withType(ProcessResources).configureEach {
+    var replaceProperties = [
+            mod_version            : mod_version,
+    ]
+    inputs.properties replaceProperties
 
-
-processResources {
-    inputs.property "version", project.version
-
-    filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+    filesMatching(['META-INF/neoforge.neoforge.mods.toml']) {
+        expand replaceProperties
     }
 }
 
@@ -65,6 +62,7 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
+    atAccessWideners.add(loom.accessWidenerPath.get().asFile.getName())
 }
 
 sourcesJar {
