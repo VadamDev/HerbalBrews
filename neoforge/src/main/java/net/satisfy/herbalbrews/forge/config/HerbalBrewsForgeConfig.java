@@ -2,26 +2,27 @@ package net.satisfy.herbalbrews.forge.config;
 
 import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import com.electronwill.nightconfig.core.io.WritingMode;
-import net.minecraftforge.common.ForgeConfigSpec;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.event.config.ModConfigEvent;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.event.config.ModConfigEvent;
+import net.neoforged.neoforge.common.ModConfigSpec;
+
 
 import java.io.File;
 
 public class HerbalBrewsForgeConfig {
-    public static final ForgeConfigSpec COMMON_CONFIG;
+    public static final ModConfigSpec COMMON_CONFIG;
 
-    public static final ForgeConfigSpec.BooleanValue ITEMS_BANNER_GIVE_EFFECT;
-    public static final ForgeConfigSpec.BooleanValue ITEMS_BANNER_SHOW_TOOLTIP;
-    public static final ForgeConfigSpec.BooleanValue ITEMS_HAT_DAMAGE_REDUCTION_ENABLED;
-    public static final ForgeConfigSpec.IntValue ITEMS_HAT_DAMAGE_REDUCTION_AMOUNT;
+    public static final ModConfigSpec.BooleanValue ITEMS_BANNER_GIVE_EFFECT;
+    public static final ModConfigSpec.BooleanValue ITEMS_BANNER_SHOW_TOOLTIP;
+    public static final ModConfigSpec.BooleanValue ITEMS_HAT_DAMAGE_REDUCTION_ENABLED;
+    public static final ModConfigSpec.IntValue ITEMS_HAT_DAMAGE_REDUCTION_AMOUNT;
     
-    public static final ForgeConfigSpec.IntValue BLOCKS_DRYING_DURATION;
-    public static final ForgeConfigSpec.IntValue BLOCKS_BREWING_DURATION;
-    public static final ForgeConfigSpec.IntValue BLOCKS_JUG_EFFECT_DURATION;
+    public static final ModConfigSpec.IntValue BLOCKS_DRYING_DURATION;
+    public static final ModConfigSpec.IntValue BLOCKS_BREWING_DURATION;
+    public static final ModConfigSpec.IntValue BLOCKS_JUG_EFFECT_DURATION;
 
     static {
-        ForgeConfigSpec.Builder builder = new ForgeConfigSpec.Builder();
+        ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
 
         builder.push("items");
 
@@ -68,7 +69,7 @@ public class HerbalBrewsForgeConfig {
     public static void onReload(final ModConfigEvent.Reloading configEvent) {
     }
 
-    public static void loadConfig(ForgeConfigSpec spec, String path) {
+    public static void loadConfig(ModConfigSpec spec, String path) {
         final CommentedFileConfig file = CommentedFileConfig.builder(new File(path))
                 .sync()
                 .preserveInsertionOrder()
@@ -76,6 +77,6 @@ public class HerbalBrewsForgeConfig {
                 .writingMode(WritingMode.REPLACE)
                 .build();
         file.load();
-        spec.setConfig(file);
+        spec.correct(file);
     }
 }

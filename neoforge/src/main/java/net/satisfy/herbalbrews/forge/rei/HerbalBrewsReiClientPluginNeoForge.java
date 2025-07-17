@@ -7,7 +7,7 @@ import me.shedaniel.rei.forge.REIPluginClient;
 import net.satisfy.herbalbrews.core.compat.rei.HerbalBrewsReiClientPlugin;
 
 @REIPluginClient
-public class HerbalBrewsReiClientPluginForge implements REIClientPlugin {
+public class HerbalBrewsReiClientPluginNeoForge implements REIClientPlugin {
 
     @Override
     public void registerCategories(CategoryRegistry registry) {

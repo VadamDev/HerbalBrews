@@ -1,4 +1,4 @@
-package net.satisfy.herbalbrews.platform.forge;
+package net.satisfy.herbalbrews.platform.neoforge;
 
 import net.satisfy.herbalbrews.forge.config.HerbalBrewsForgeConfig;
 import net.satisfy.herbalbrews.platform.PlatformHelper;
