@@ -1,6 +1,7 @@
 package net.satisfy.herbalbrews.core.blocks.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -23,18 +24,18 @@ public class DrinkBlockEntity extends BlockEntity {
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        if (tag.contains("StoredNbt")) {
-            storedNbt = tag.getCompound("StoredNbt");
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
+        if (compoundTag.contains("StoredNbt")) {
+            storedNbt = compoundTag.getCompound("StoredNbt");
         }
     }
 
     @Override
-    public void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
         if (storedNbt != null) {
-            tag.put("StoredNbt", storedNbt);
+            compoundTag.put("StoredNbt", storedNbt);
         }
     }
 }

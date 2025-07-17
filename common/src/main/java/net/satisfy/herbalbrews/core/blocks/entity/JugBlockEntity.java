@@ -1,6 +1,7 @@
 package net.satisfy.herbalbrews.core.blocks.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -49,26 +50,26 @@ public class JugBlockEntity extends BlockEntity {
     }
 
     @Override
-    protected void saveAdditional(@NotNull CompoundTag tag) {
-        super.saveAdditional(tag);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
         ListTag drinkList = new ListTag();
         for (ItemStack drink : drinks) {
             CompoundTag drinkTag = new CompoundTag();
-            drink.save(drinkTag);
+            drink.save(provider, drinkTag);
             drinkList.add(drinkTag);
         }
-        tag.put("Drinks", drinkList);
+        compoundTag.put("Drinks", drinkList);
     }
 
     @Override
-    public void load(@NotNull CompoundTag tag) {
-        super.load(tag);
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
         drinks.clear();
-        if (tag.contains("Drinks", 9)) {
-            ListTag drinkList = tag.getList("Drinks", 10);
+        if (compoundTag.contains("Drinks", 9)) {
+            ListTag drinkList = compoundTag.getList("Drinks", 10);
             for (int i = 0; i < drinkList.size(); i++) {
                 CompoundTag drinkTag = drinkList.getCompound(i);
-                ItemStack drink = ItemStack.of(drinkTag);
+                ItemStack drink = ItemStack.parseOptional(provider, drinkTag);
                 drinks.add(drink);
             }
         }

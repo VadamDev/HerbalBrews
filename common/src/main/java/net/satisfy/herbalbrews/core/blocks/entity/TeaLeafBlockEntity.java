@@ -1,6 +1,7 @@
 package net.satisfy.herbalbrews.core.blocks.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,15 +26,15 @@ public class TeaLeafBlockEntity extends BlockEntity implements BlockEntityTicker
     }
 
     @Override
-    public void load(CompoundTag tag) {
-        super.load(tag);
-        timer = tag.getInt("Timer");
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
+        timer = compoundTag.getInt("Timer");
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag) {
-        super.saveAdditional(tag);
-        tag.putInt("Timer", timer);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
+        compoundTag.putInt("Timer", timer);
     }
 
     private Block getEndBlock(Block startBlock) {

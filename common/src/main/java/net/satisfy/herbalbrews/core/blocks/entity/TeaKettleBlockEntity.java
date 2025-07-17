@@ -2,6 +2,7 @@ package net.satisfy.herbalbrews.core.blocks.entity;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -99,27 +100,27 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
     }
 
     @Override
-    public void load(CompoundTag nbt) {
-        super.load(nbt);
-        ContainerHelper.loadAllItems(nbt, this.inventory);
-        this.cookingTime = nbt.getInt("CookingTime");
-        this.isBeingBurned = nbt.getBoolean("IsBeingBurned");
-        this.waterLevel = nbt.getInt("WaterLevel");
-        this.heatLevel = nbt.getInt("HeatLevel");
-        this.experience = nbt.getFloat("Experience");
-        this.requiredDuration = nbt.getInt("RequiredDuration");
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
+        ContainerHelper.loadAllItems(compoundTag, this.inventory, provider);
+        this.cookingTime = compoundTag.getInt("CookingTime");
+        this.isBeingBurned = compoundTag.getBoolean("IsBeingBurned");
+        this.waterLevel = compoundTag.getInt("WaterLevel");
+        this.heatLevel = compoundTag.getInt("HeatLevel");
+        this.experience = compoundTag.getFloat("Experience");
+        this.requiredDuration = compoundTag.getInt("RequiredDuration");
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt) {
-        super.saveAdditional(nbt);
-        ContainerHelper.saveAllItems(nbt, this.inventory);
-        nbt.putInt("CookingTime", this.cookingTime);
-        nbt.putBoolean("IsBeingBurned", this.isBeingBurned);
-        nbt.putInt("WaterLevel", this.waterLevel);
-        nbt.putInt("HeatLevel", this.heatLevel);
-        nbt.putFloat("Experience", this.experience);
-        nbt.putInt("RequiredDuration", this.requiredDuration);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
+        ContainerHelper.saveAllItems(compoundTag, this.inventory, provider);
+        compoundTag.putInt("CookingTime", this.cookingTime);
+        compoundTag.putBoolean("IsBeingBurned", this.isBeingBurned);
+        compoundTag.putInt("WaterLevel", this.waterLevel);
+        compoundTag.putInt("HeatLevel", this.heatLevel);
+        compoundTag.putFloat("Experience", this.experience);
+        compoundTag.putInt("RequiredDuration", this.requiredDuration);
     }
 
     @SuppressWarnings("deprecation")
