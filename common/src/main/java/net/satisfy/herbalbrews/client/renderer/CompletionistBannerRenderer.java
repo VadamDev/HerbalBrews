@@ -22,7 +22,7 @@ import net.satisfy.herbalbrews.core.blocks.CompletionistWallBannerBlock;
 import net.satisfy.herbalbrews.core.blocks.entity.CompletionistBannerEntity;
 
 public class CompletionistBannerRenderer implements BlockEntityRenderer<CompletionistBannerEntity> {
-    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(new ResourceLocation(HerbalBrews.MOD_ID, "banner"), "main");
+    public static final ModelLayerLocation LAYER_LOCATION = new ModelLayerLocation(ResourceLocation.fromNamespaceAndPath(HerbalBrews.MOD_ID, "banner"), "main");
 
     public static final String FLAG = "flag";
     private static final String POLE = "pole";

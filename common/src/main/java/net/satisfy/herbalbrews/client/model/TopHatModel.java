@@ -33,12 +33,11 @@ public class TopHatModel<T extends Entity> extends EntityModel<T> implements Hat
         return LayerDefinition.create(meshdefinition, 48, 48);
     }
 
-
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, int k) {
         poseStack.pushPose();
         poseStack.scale(1.05F, 1.05F, 1.05F);
-        topHat.render(poseStack, buffer, packedLight, packedOverlay);
+        topHat.render(poseStack, vertexConsumer, i, j, k);
         poseStack.popPose();
     }
 

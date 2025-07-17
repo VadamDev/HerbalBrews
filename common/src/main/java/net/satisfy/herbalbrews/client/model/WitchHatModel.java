@@ -33,18 +33,11 @@ public class WitchHatModel<T extends Entity> extends EntityModel<T> implements H
         return LayerDefinition.create(meshdefinition, 48, 48);
     }
 
-
-
-
-
-
-
-
     @Override
-    public void renderToBuffer(PoseStack poseStack, VertexConsumer buffer, int packedLight, int packedOverlay, float red, float green, float blue, float alpha) {
+    public void renderToBuffer(PoseStack poseStack, VertexConsumer vertexConsumer, int i, int j, int k) {
         poseStack.pushPose();
         poseStack.scale(1.05F, 1.05F, 1.05F);
-        witchHat.render(poseStack, buffer, packedLight, packedOverlay);
+        witchHat.render(poseStack, vertexConsumer, i, j, k);
         poseStack.popPose();
     }
 
