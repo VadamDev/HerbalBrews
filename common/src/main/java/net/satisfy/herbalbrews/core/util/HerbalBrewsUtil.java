@@ -56,6 +56,8 @@ public class HerbalBrewsUtil {
         return buffer[0];
     }
 
+    // TODO fixme
+    /*
     public static NonNullList<Ingredient> deserializeIngredients(JsonArray json) {
         NonNullList<Ingredient> ingredients = NonNullList.create();
 
@@ -66,7 +68,7 @@ public class HerbalBrewsUtil {
             }
         }
         return ingredients;
-    }
+    }*/
 
     public static boolean matchesRecipe(Container inventory, NonNullList<Ingredient> recipe, int startIndex, int endIndex) {
         List<ItemStack> validStacks = new ArrayList<>();

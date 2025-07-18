@@ -3,6 +3,7 @@ package net.satisfy.herbalbrews.core.recipe;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
@@ -22,12 +23,10 @@ import org.jetbrains.annotations.NotNull;
 
 public class CauldronRecipe implements Recipe<Container> {
 
-    private final ResourceLocation identifier;
     private final NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs;
     private final ItemStack output;
 
-    public CauldronRecipe(ResourceLocation identifier, NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs, ItemStack output) {
-        this.identifier = identifier;
+    public CauldronRecipe(NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs, ItemStack output) {
         this.inputs = inputs;
         this.output = output;
     }
@@ -38,7 +37,7 @@ public class CauldronRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(Container container, RegistryAccess registryAccess) {
+    public ItemStack assemble(Container recipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
@@ -54,13 +53,8 @@ public class CauldronRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(RegistryAccess registryAccess) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return this.output.copy();
-    }
-
-    @Override
-    public @NotNull ResourceLocation getId() {
-        return this.identifier;
     }
 
     @Override
@@ -78,7 +72,18 @@ public class CauldronRecipe implements Recipe<Container> {
         return true;
     }
     public static class Serializer implements RecipeSerializer<CauldronRecipe> {
+        @Override
+        public MapCodec<CauldronRecipe> codec() {
+            return null;
+        }
 
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, CauldronRecipe> streamCodec() {
+            return null;
+        }
+
+        // TODO fixme
+        /*
         @Override
         public @NotNull CauldronRecipe fromJson(ResourceLocation id, JsonObject json) {
             final var ingredients = HerbalBrewsUtil.deserializeIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
@@ -106,16 +111,6 @@ public class CauldronRecipe implements Recipe<Container> {
             }
 
             buf.writeItem(recipe.output);
-        }
-
-        @Override
-        public MapCodec<CauldronRecipe> codec() {
-            return null;
-        }
-
-        @Override
-        public StreamCodec<RegistryFriendlyByteBuf, CauldronRecipe> streamCodec() {
-            return null;
-        }
+        }*/
     }
 }

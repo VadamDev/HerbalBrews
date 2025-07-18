@@ -253,6 +253,8 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             }
         }
 
+        // TODO fixme
+        /*
         TeaKettleRecipe recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), this, world).orElse(null);
         boolean canCraft = canCraft(recipe);
 
@@ -271,7 +273,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
         } else {
             this.cookingTime = 0;
             world.setBlock(pos, state.setValue(TeaKettleBlock.COOKING, false), Block.UPDATE_ALL);
-        }
+        }*/
 
         if (!getItem(WATER_SLOT).isEmpty()) {
             ItemStack waterItem = getItem(WATER_SLOT);

@@ -34,11 +34,12 @@ public class HerbalBrewsJEIPlugin implements IModPlugin {
 
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
-        List<TeaKettleRecipe> cookingCauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
+        // TODO fixme
+        /*List<TeaKettleRecipe> cookingCauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
         registration.addRecipes(TeaKettleCategory.TEA_KETTLE_TYPE, cookingCauldronRecipes);
 
         List<CauldronRecipe> cauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.get());
-        registration.addRecipes(CauldronCategory.CAULDRON_TYPE, cauldronRecipes);
+        registration.addRecipes(CauldronCategory.CAULDRON_TYPE, cauldronRecipes);*/
     }
 
 

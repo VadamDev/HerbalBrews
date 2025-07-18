@@ -2,10 +2,14 @@ package net.satisfy.herbalbrews.core.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.MapCodec;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -19,7 +23,6 @@ import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class TeaKettleRecipe implements Recipe<Container> {
-    final ResourceLocation id;
     private final NonNullList<Ingredient> inputs;
     private final ItemStack output;
     private final MobEffect effect;
@@ -28,8 +31,7 @@ public class TeaKettleRecipe implements Recipe<Container> {
     private final int requiredHeat;
     private final int requiredDuration;
 
-    public TeaKettleRecipe(ResourceLocation id, NonNullList<Ingredient> inputs, ItemStack output, MobEffect effect, int effectDuration, int requiredWater, int requiredHeat, int requiredDuration) {
-        this.id = id;
+    public TeaKettleRecipe(NonNullList<Ingredient> inputs, ItemStack output, MobEffect effect, int effectDuration, int requiredWater, int requiredHeat, int requiredDuration) {
         this.inputs = inputs;
         this.output = output;
         this.effect = effect;
@@ -63,7 +65,7 @@ public class TeaKettleRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ItemStack assemble(Container inventory, RegistryAccess registryManager) {
+    public ItemStack assemble(Container recipeInput, HolderLookup.Provider provider) {
         return this.output.copy();
     }
 
@@ -77,7 +79,7 @@ public class TeaKettleRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ItemStack getResultItem(RegistryAccess registryManager) {
+    public ItemStack getResultItem(HolderLookup.Provider provider) {
         return this.output;
     }
 
@@ -102,11 +104,6 @@ public class TeaKettleRecipe implements Recipe<Container> {
     }
 
     @Override
-    public @NotNull ResourceLocation getId() {
-        return id;
-    }
-
-    @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeTypeRegistry.TEA_KETTLE_RECIPE_SERIALIZER.get();
     }
@@ -128,6 +125,19 @@ public class TeaKettleRecipe implements Recipe<Container> {
 
     public static class Serializer implements RecipeSerializer<TeaKettleRecipe> {
 
+        // TODO fixme
+        @Override
+        public MapCodec<TeaKettleRecipe> codec() {
+            return null;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, TeaKettleRecipe> streamCodec() {
+            return null;
+        }
+
+        // TODO fixme
+        /*
         @Override
         public @NotNull TeaKettleRecipe fromJson(ResourceLocation id, JsonObject json) {
             final var ingredients = HerbalBrewsUtil.deserializeIngredients(GsonHelper.getAsJsonArray(json, "ingredients"));
@@ -205,7 +215,7 @@ public class TeaKettleRecipe implements Recipe<Container> {
             buf.writeInt(recipe.requiredWater);
             buf.writeInt(recipe.requiredHeat);
             buf.writeInt(recipe.requiredDuration);
-        }
+        }*/
     }
 
     public static class Type implements RecipeType<TeaKettleRecipe> {

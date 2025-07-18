@@ -8,11 +8,17 @@ import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
+import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
 import org.jetbrains.annotations.NotNull;
 
 public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
@@ -26,7 +32,7 @@ public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
     private final Component title;
 
     public CauldronCategory(IGuiHelper helper) {
-        var texture = new net.minecraft.resources.ResourceLocation("herbalbrews", "textures/gui/cauldron.png");
+        var texture = HerbalBrewsIdentifier.identifier("textures/gui/cauldron.png");
         this.background = helper.createDrawable(texture, X_OFFSET, Y_OFFSET, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
         var cauldronStack = new ItemStack(ObjectRegistry.CAULDRON.get());
         this.icon = helper.createDrawableIngredient(VanillaTypes.ITEM_STACK, cauldronStack);
@@ -59,13 +65,19 @@ public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CauldronRecipe recipe, IFocusGroup focuses) {
         ItemStack potion1 = new ItemStack(Items.POTION);
-        potion1.getOrCreateTag().putString("Potion", "minecraft:swiftness");
+        PotionContents potionContents1 = potion1.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        potionContents1.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("swiftness")))));
+        potion1.set(DataComponents.POTION_CONTENTS, potionContents1);
 
         ItemStack potion2 = new ItemStack(Items.POTION);
-        potion2.getOrCreateTag().putString("Potion", "minecraft:healing");
+        PotionContents potionContents2 = potion1.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        potionContents2.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("healing")))));
+        potion2.set(DataComponents.POTION_CONTENTS, potionContents2);
 
         ItemStack potion3 = new ItemStack(Items.POTION);
-        potion3.getOrCreateTag().putString("Potion", "minecraft:strength");
+        PotionContents potionContents3 = potion1.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        potionContents3.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("strength")))));
+        potion2.set(DataComponents.POTION_CONTENTS, potionContents3);
 
         builder.addSlot(RecipeIngredientRole.INPUT, 79 - X_OFFSET, 22 - Y_OFFSET)
                 .addItemStack(potion1);
@@ -75,7 +87,9 @@ public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
                 .addItemStack(potion3);
 
         ItemStack outputFlask = new ItemStack(ObjectRegistry.FLASK.get());
-        outputFlask.getOrCreateTag().putString("Effect", "minecraft:regeneration");
+        PotionContents outputContents = outputFlask.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        outputContents.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("regeneration")))));
+        outputFlask.set(DataComponents.POTION_CONTENTS, outputContents);
         builder.addSlot(RecipeIngredientRole.OUTPUT, 79 - X_OFFSET, 58 - Y_OFFSET)
                 .addItemStack(outputFlask);
 

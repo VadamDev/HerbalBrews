@@ -1,10 +1,15 @@
 package net.satisfy.herbalbrews.core.compat.jei.category;
 
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.registry.TagsRegistry;
+import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
 import org.joml.Vector2i;
 import org.jetbrains.annotations.NotNull;
 import mezz.jei.api.constants.VanillaTypes;
@@ -48,7 +53,7 @@ public class TeaKettleCategory implements IRecipeCategory<TeaKettleRecipe> {
     private final IDrawableAnimated arrow;
     private final Component title;
 
-    private final ResourceLocation texture = new ResourceLocation("herbalbrews", "textures/gui/tea_kettle.png");
+    private final ResourceLocation texture = HerbalBrewsIdentifier.identifier("textures/gui/tea_kettle.png");
 
     public TeaKettleCategory(IGuiHelper helper) {
         this.background = helper.createDrawable(texture, X_OFFSET, Y_OFFSET, BACKGROUND_WIDTH, BACKGROUND_HEIGHT);
@@ -93,7 +98,9 @@ public class TeaKettleCategory implements IRecipeCategory<TeaKettleRecipe> {
                 .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
 
         ItemStack waterBottle = new ItemStack(Items.POTION);
-        waterBottle.getOrCreateTag().putString("Potion", "minecraft:water");
+        PotionContents potionContents = waterBottle.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        potionContents.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("water")))));
+        waterBottle.set(DataComponents.POTION_CONTENTS, potionContents);
 
         builder.addSlot(RecipeIngredientRole.INPUT, 118 - X_OFFSET, 43 - Y_OFFSET)
                 .addIngredients(Ingredient.of(
