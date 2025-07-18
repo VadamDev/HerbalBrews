@@ -10,7 +10,7 @@ config = "herbalbrews-neoforge.mixins.json"
 [[mods]]
 modId = "herbalbrews"
 
-version = "${mod_version}"
+version="${mod_version}"
 displayName = "[Let's Do] HerbalBrews"
 
 credits = "MissLilitu"
