@@ -10,7 +10,7 @@ import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.satisfy.herbalbrews.core.registry.ScreenHandlerTypeRegistry;
+import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.TagsRegistry;
 import org.jetbrains.annotations.NotNull;
 
@@ -23,7 +23,7 @@ public class TeaKettleGuiHandler extends AbstractContainerMenu {
     }
 
     public TeaKettleGuiHandler(int syncId, Inventory playerInventory, Container container, ContainerData propertyDelegate) {
-        super(ScreenHandlerTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), syncId);
+        super(MenuTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), syncId);
         this.container = container;
         this.propertyDelegate = propertyDelegate;
         addDataSlots(this.propertyDelegate);

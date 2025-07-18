@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.PotionItem;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
-import net.satisfy.herbalbrews.core.registry.ScreenHandlerTypeRegistry;
+import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
 public class CauldronGuiHandler extends AbstractContainerMenu {
@@ -23,7 +23,7 @@ public class CauldronGuiHandler extends AbstractContainerMenu {
     }
 
     public CauldronGuiHandler(int syncId, Inventory playerInventory, Container container, ContainerData data) {
-        super(ScreenHandlerTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), syncId);
+        super(MenuTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), syncId);
         this.container = container;
         this.data = data;
         addDataSlots(this.data);

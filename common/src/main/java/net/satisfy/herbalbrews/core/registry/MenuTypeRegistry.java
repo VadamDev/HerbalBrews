@@ -12,7 +12,7 @@ import net.satisfy.herbalbrews.client.gui.handler.TeaKettleGuiHandler;
 import java.util.function.Supplier;
 
 
-public class ScreenHandlerTypeRegistry {
+public class MenuTypeRegistry {
     public static final DeferredRegister<MenuType<?>> MENU_TYPES = DeferredRegister.create(HerbalBrews.MOD_ID, Registries.MENU);
 
     public static final RegistrySupplier<MenuType<TeaKettleGuiHandler>> TEA_KETTLE_SCREEN_HANDLER = create("tea_kettle_gui_handler", () -> new MenuType<>(TeaKettleGuiHandler::new, FeatureFlags.VANILLA_SET));

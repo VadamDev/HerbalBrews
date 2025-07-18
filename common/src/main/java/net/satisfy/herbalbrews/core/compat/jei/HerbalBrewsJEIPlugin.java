@@ -7,7 +7,6 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
-import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -17,10 +16,9 @@ import net.satisfy.herbalbrews.core.compat.jei.category.CauldronCategory;
 import net.satisfy.herbalbrews.core.compat.jei.category.TeaKettleCategory;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
-import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipeInput;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
-import net.satisfy.herbalbrews.core.registry.ScreenHandlerTypeRegistry;
+import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
 import org.jetbrains.annotations.NotNull;
 
@@ -61,8 +59,8 @@ public class HerbalBrewsJEIPlugin implements IModPlugin {
 
     @Override
     public void registerRecipeTransferHandlers(IRecipeTransferRegistration registration) {
-        registration.addRecipeTransferHandler(TeaKettleGuiHandler.class, ScreenHandlerTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), TeaKettleCategory.TEA_KETTLE_TYPE, 1, 6, 7, 36);
-        registration.addRecipeTransferHandler(CauldronGuiHandler.class, ScreenHandlerTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), CauldronCategory.CAULDRON_TYPE, 1, 3, 5, 36);
+        registration.addRecipeTransferHandler(TeaKettleGuiHandler.class, MenuTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), TeaKettleCategory.TEA_KETTLE_TYPE, 1, 6, 7, 36);
+        registration.addRecipeTransferHandler(CauldronGuiHandler.class, MenuTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), CauldronCategory.CAULDRON_TYPE, 1, 3, 5, 36);
     }
 
     @Override

@@ -13,7 +13,7 @@ import net.satisfy.herbalbrews.client.model.TopHatModel;
 import net.satisfy.herbalbrews.client.model.WitchHatModel;
 import net.satisfy.herbalbrews.client.renderer.CompletionistBannerRenderer;
 import net.satisfy.herbalbrews.core.registry.EntityTypeRegistry;
-import net.satisfy.herbalbrews.core.registry.ScreenHandlerTypeRegistry;
+import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 
 import static net.satisfy.herbalbrews.core.registry.ObjectRegistry.*;
 
@@ -33,8 +33,8 @@ public class HerbalbrewsClient {
         );
 
 
-        MenuRegistry.registerScreenFactory(ScreenHandlerTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), TeaKettleGui::new);
-        MenuRegistry.registerScreenFactory(ScreenHandlerTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), CauldronGui::new);
+        MenuRegistry.registerScreenFactory(MenuTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), TeaKettleGui::new);
+        MenuRegistry.registerScreenFactory(MenuTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), CauldronGui::new);
         BlockEntityRendererRegistry.register(EntityTypeRegistry.HERBALBREWS_BANNER.get(), CompletionistBannerRenderer::new);
     }
 
