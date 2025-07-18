@@ -1,12 +1,10 @@
 package net.satisfy.herbalbrews.core.items;
 
-import com.google.common.collect.ImmutableMultimap;
-import com.google.common.collect.Multimap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.EquipmentSlotGroup;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -21,15 +19,13 @@ import net.satisfy.herbalbrews.core.util.HerbalBrewsTiers;
 import org.jetbrains.annotations.NotNull;
 
 public class JugItem extends BlockItem {
-    private final Multimap<Attribute, AttributeModifier> toolAttributes;
 
     public JugItem(Block block, Properties properties) {
-        super(block, properties.durability(GLASS_TIER.getUses()));
-        float attackDamage = 8F + GLASS_TIER.getAttackDamageBonus();
-        ImmutableMultimap.Builder<Attribute, AttributeModifier> builder = ImmutableMultimap.builder();
-        builder.put(Attributes.ATTACK_SPEED.value(), new AttributeModifier(BASE_ATTACK_SPEED_ID, -2F, AttributeModifier.Operation.ADD_VALUE));
-        builder.put(Attributes.ATTACK_DAMAGE.value(), new AttributeModifier(BASE_ATTACK_DAMAGE_ID, attackDamage, AttributeModifier.Operation.ADD_VALUE));
-        this.toolAttributes = builder.build();
+        super(block, properties.durability(GLASS_TIER.getUses())
+                .attributes(ItemAttributeModifiers.builder()
+                        .add(Attributes.ATTACK_SPEED, new AttributeModifier(BASE_ATTACK_SPEED_ID, -2F, AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        .add(Attributes.ATTACK_DAMAGE, new AttributeModifier(BASE_ATTACK_DAMAGE_ID, 8F + GLASS_TIER.getAttackDamageBonus(), AttributeModifier.Operation.ADD_VALUE), EquipmentSlotGroup.MAINHAND)
+                        .build()));
     }
 
     @Override
@@ -66,10 +62,5 @@ public class JugItem extends BlockItem {
     @Override
     public int getEnchantmentValue() {
         return GLASS_TIER.getEnchantmentValue();
-    }
-
-
-    public @NotNull Multimap<Attribute, AttributeModifier> getDefaultAttributeModifiers(EquipmentSlot equipmentSlot) {
-        return equipmentSlot == EquipmentSlot.MAINHAND ? this.toolAttributes : super.getDefaultAttributeModifiers();
     }
 }
