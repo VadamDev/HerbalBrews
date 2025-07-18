@@ -267,6 +267,9 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             }
         };
         RecipeHolder<TeaKettleRecipe> recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), recipeInput, world).orElse(null);
+        if (recipe == null) {
+            return;
+        }
         boolean canCraft = canCraft(recipe.value());
 
         if (canCraft) {
