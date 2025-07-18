@@ -2,16 +2,8 @@
   "type": "herbalbrews:kettle_brewing",
   "experience": 0.8,
   "crafting_duration": 25,
-  "fluid": [
-    {
-      "amount": 10
-    }
-  ],
-  "heat_needed": [
-    {
-      "amount": 40
-    }
-  ],
+  "fluid_amount": 10,
+  "heat_amount": 40,
   "ingredients": [
     {
       "item": "herbalbrews:dried_green_tea"
@@ -23,6 +15,6 @@
   "result": {
     "item": "herbalbrews:green_tea",
     "effect": "herbalbrews:balanced",
-    "effectduration": 1800
+    "effect_duration": 1800
   }
 }

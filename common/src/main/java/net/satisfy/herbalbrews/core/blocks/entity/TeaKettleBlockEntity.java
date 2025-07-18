@@ -22,15 +22,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
 import net.minecraft.world.level.block.state.BlockState;
 import net.satisfy.herbalbrews.client.gui.handler.TeaKettleGuiHandler;
 import net.satisfy.herbalbrews.core.blocks.TeaKettleBlock;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
-import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipeInput;
 import net.satisfy.herbalbrews.core.registry.EntityTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.TagsRegistry;
@@ -181,7 +180,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
         ItemStack recipeOutput = recipe.assemble();
         if (recipe.getEffect() != null && recipe.getEffectDuration() > 0) {
             PotionContents data = recipeOutput.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-            data.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(recipe.getEffect()), recipe.getEffectDuration()));
+            data.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(recipe.getEffect().value()), recipe.getEffectDuration()));
             recipeOutput.set(DataComponents.POTION_CONTENTS, data);
         }
         ItemStack outputSlotStack = this.getItem(OUTPUT_SLOT);
@@ -256,11 +255,18 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             }
         }
 
-        TeaKettleRecipeInput teaKettleRecipeInput = new TeaKettleRecipeInput(this);
-        RecipeHolder<TeaKettleRecipe> recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), teaKettleRecipeInput, world).orElse(null);
-        if (recipe == null) {
-            return;
-        }
+        RecipeInput recipeInput = new RecipeInput() {
+            @Override
+            public ItemStack getItem(int i) {
+                return TeaKettleBlockEntity.this.getItem(i);
+            }
+
+            @Override
+            public int size() {
+                return TeaKettleBlockEntity.this.getItems().size();
+            }
+        };
+        RecipeHolder<TeaKettleRecipe> recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), recipeInput, world).orElse(null);
         boolean canCraft = canCraft(recipe.value());
 
         if (canCraft) {

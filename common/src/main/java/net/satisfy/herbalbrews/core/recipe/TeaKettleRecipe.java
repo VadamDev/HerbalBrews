@@ -9,6 +9,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -17,9 +18,10 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.effect.MobEffect;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
+import net.satisfy.herbalbrews.core.util.StreamCodecUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
+public class TeaKettleRecipe implements Recipe<RecipeInput> {
     private final NonNullList<Ingredient> inputs;
     private final ItemStack output;
     private final Holder<MobEffect> effect;
@@ -29,7 +31,7 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
     private final int requiredDuration;
     private final float experience;
 
-    public TeaKettleRecipe(float experience, int effectDuration, int requiredWater, int requiredHeat, int requiredDuration, ItemStack output, Holder<MobEffect> effect, NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs) {
+    public TeaKettleRecipe(NonNullList<Ingredient> inputs, ItemStack output, Holder<MobEffect> effect, int effectDuration, int requiredWater, int requiredHeat, int requiredDuration, float experience) {
         this.inputs = inputs;
         this.output = output;
         this.effect = effect;
@@ -40,14 +42,6 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
         this.experience = experience;
     }
 
-    private boolean waterLevelSufficient(TeaKettleRecipeInput teaKettleRecipeInput) {
-        return teaKettleRecipeInput.getWaterLevel() >= requiredWater;
-    }
-
-    private boolean heatLevelSufficient(TeaKettleRecipeInput teaKettleRecipeInput) {
-        return teaKettleRecipeInput.getHeatLevel() >= requiredHeat;
-    }
-
     public ItemStack assemble() {
         return assemble(null, null);
     }
@@ -56,13 +50,17 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
         return RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.getId();
     }
 
-    @Override
-    public boolean matches(TeaKettleRecipeInput recipeInput, Level level) {
-        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) && waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput);
+    public ItemStack getOutput() {
+        return output;
     }
 
     @Override
-    public ItemStack assemble(TeaKettleRecipeInput recipeInput, HolderLookup.Provider provider) {
+    public boolean matches(RecipeInput recipeInput, Level level) {
+        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) /*&& waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput) TODO fixme*/;
+    }
+
+    @Override
+    public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
         return this.output.copy();
     }
 
@@ -80,11 +78,7 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
         return this.output;
     }
 
-    public MobEffect getEffect() {
-        return this.effect.value();
-    }
-
-    public Holder<MobEffect> getEffectHolder() {
+    public Holder<MobEffect> getEffect() {
         return this.effect;
     }
 
@@ -105,6 +99,15 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
     }
 
     @Override
+    public NonNullList<Ingredient> getIngredients() {
+        return this.inputs;
+    }
+
+    public NonNullList<Ingredient> getInputs() {
+        return this.inputs;
+    }
+
+    @Override
     public @NotNull RecipeSerializer<?> getSerializer() {
         return RecipeTypeRegistry.TEA_KETTLE_RECIPE_SERIALIZER.get();
     }
@@ -112,11 +115,6 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
     @Override
     public @NotNull RecipeType<?> getType() {
         return RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get();
-    }
-
-    @Override
-    public @NotNull NonNullList<Ingredient> getIngredients() {
-        return this.inputs;
     }
 
     @Override
@@ -128,50 +126,38 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
         return this.experience;
     }
 
+    // TODO fixme
+    /*
+    private boolean waterLevelSufficient(RecipeInput recipeInput) {
+        return recipeInput.getWaterLevel() >= requiredWater;
+    }
+
+    private boolean heatLevelSufficient(RecipeInput recipeInput) {
+        return recipeInput.getHeatLevel() >= requiredHeat;
+    }*/
+
     public static class Serializer implements RecipeSerializer<TeaKettleRecipe> {
 
-        public final StreamCodec<RegistryFriendlyByteBuf, TeaKettleRecipe> STREAM_CODEC =
-                StreamCodec.of(this::toNetwork, this::fromNetwork);
+        public final StreamCodec<RegistryFriendlyByteBuf, TeaKettleRecipe> STREAM_CODEC = StreamCodec.of(this::toNetwork, this::fromNetwork);
 
-        private final MapCodec<TeaKettleRecipe> codec = RecordCodecBuilder.mapCodec((instance) -> {
-            return instance.group(Codec.FLOAT.fieldOf("experience").orElse(0.0F).forGetter((teaKettleRecipe) -> {
-                        return teaKettleRecipe.experience;
-                    }),
-                    Codec.INT.fieldOf("effectDuration").orElse(0).forGetter((teaKettleRecipe) -> {
-                        return teaKettleRecipe.effectDuration;
-                    }),
-                    Codec.INT.fieldOf("requiredWater").orElse(0).forGetter((teaKettleRecipe) -> {
-                        return teaKettleRecipe.requiredWater;
-                    }),
-                    Codec.INT.fieldOf("requiredHeat").orElse(0).forGetter((teaKettleRecipe) -> {
-                        return teaKettleRecipe.requiredHeat;
-                    }),
-                    Codec.INT.fieldOf("requiredDuration").orElse(0).forGetter((teaKettleRecipe) -> {
-                        return teaKettleRecipe.requiredDuration;
-                    }),
-                    ItemStack.STRICT_CODEC.fieldOf("result").forGetter((teaKettleRecipe) -> {
-                        return teaKettleRecipe.output;
-                    }),
-                    MobEffect.CODEC.fieldOf("effect").forGetter(teaKettleRecipe -> {
-                        return teaKettleRecipe.effect;
-                    }),
-                    Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap((list) -> {
-                        Ingredient[] ingredients = (Ingredient[])list.stream().filter((ingredient) -> {
-                            return !ingredient.isEmpty();
-                        }).toArray(Ingredient[]::new);
-                        if (ingredients.length == 0) {
-                            return DataResult.error(() -> {
-                                return "No ingredients for cauldron recipe";
-                            });
-                        } else {
-                            return ingredients.length > 4 ? DataResult.error(() -> {
-                                return "Too many ingredients for cauldron recipe";
-                            }) : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
-                        }
-                        }, DataResult::success).forGetter((teaKettleRecipe) -> {
-                            return teaKettleRecipe.inputs;
-                        })).apply(instance, TeaKettleRecipe::new);
-        });
+
+        private final MapCodec<TeaKettleRecipe> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
+                    Ingredient[] ingredients = list.toArray(Ingredient[]::new);
+                    if (ingredients.length == 0) {
+                        return DataResult.error(() -> "No ingredients for shapeless recipe");
+                    }
+                    return DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                }, DataResult::success).forGetter(TeaKettleRecipe::getIngredients),
+                ItemStack.CODEC.fieldOf("result").forGetter(TeaKettleRecipe::getOutput),
+                MobEffect.CODEC.fieldOf("effect").forGetter(TeaKettleRecipe::getEffect),
+                Codec.INT.fieldOf("effect_duration").forGetter(TeaKettleRecipe::getEffectDuration),
+                Codec.INT.fieldOf("fluid_amount").forGetter(TeaKettleRecipe::getRequiredWater),
+                Codec.INT.fieldOf("heat_amount").forGetter(TeaKettleRecipe::getRequiredHeat),
+                Codec.INT.fieldOf("crafting_duration").forGetter(TeaKettleRecipe::getRequiredDuration),
+                Codec.FLOAT.fieldOf("experience").forGetter(TeaKettleRecipe::getExperience)
+                ).apply(instance, TeaKettleRecipe::new)
+        );
 
         @Override
         public MapCodec<TeaKettleRecipe> codec() {
@@ -202,7 +188,7 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
             int requiredHeat = registryFriendlyByteBuf.readInt();
             int requiredDuration = registryFriendlyByteBuf.readInt();
             float experience = registryFriendlyByteBuf.readFloat();
-            return new TeaKettleRecipe(experience, effectDuration, requiredWater, requiredHeat, requiredDuration, itemStack, BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), nonNullList);
+            return new TeaKettleRecipe(nonNullList, itemStack, BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), effectDuration, requiredWater, requiredHeat, requiredDuration, experience);
         }
 
         public void toNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf, TeaKettleRecipe recipe) {
