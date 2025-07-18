@@ -26,6 +26,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class HerbalBrewsUtil {
@@ -105,6 +106,6 @@ public class HerbalBrewsUtil {
     }
 
     public static boolean hasFrostWalker(LivingEntity entity) {
-        return entity.getItemBySlot(EquipmentSlot.FEET).get(DataComponents.ENCHANTMENTS).equals(Enchantments.FROST_WALKER);
+        return Objects.equals(entity.getItemBySlot(EquipmentSlot.FEET).get(DataComponents.ENCHANTMENTS), Enchantments.FROST_WALKER);
     }
 }
