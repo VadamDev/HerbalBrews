@@ -20,9 +20,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.component.CustomModelData;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -36,11 +36,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
 public class CauldronBlockEntity extends BlockEntity implements ImplementedInventory, BlockEntityTicker<CauldronBlockEntity>, MenuProvider {
@@ -82,20 +80,20 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+        super.loadAdditional(nbt, provider);
         this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(compoundTag, this.inventory, provider);
-        this.brewingTime = compoundTag.getInt("BrewingTime");
-        this.totalBrewingTime = compoundTag.getInt("TotalBrewingTime");
+        ContainerHelper.loadAllItems(nbt, this.inventory, provider);
+        this.brewingTime = nbt.getInt("BrewingTime");
+        this.totalBrewingTime = nbt.getInt("TotalBrewingTime");
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
-        ContainerHelper.saveAllItems(compoundTag, this.inventory, provider);
-        compoundTag.putInt("BrewingTime", this.brewingTime);
-        compoundTag.putInt("TotalBrewingTime", this.totalBrewingTime);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+        super.saveAdditional(nbt, provider);
+        ContainerHelper.saveAllItems(nbt, this.inventory, provider);
+        nbt.putInt("BrewingTime", this.brewingTime);
+        nbt.putInt("TotalBrewingTime", this.totalBrewingTime);
     }
 
     @Override
@@ -138,7 +136,7 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
             ItemStack potionStack = this.getItem(i);
             List<MobEffectInstance> potionEffects = StreamSupport
                     .stream(potionStack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY)
-                    .getAllEffects().spliterator(), false).toList();
+                            .getAllEffects().spliterator(), false).toList();
             combinedEffects.addAll(potionEffects);
         }
 
@@ -146,35 +144,29 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
             return;
         }
 
-        Map<Holder<MobEffect>, MobEffectInstance> uniqueEffectsMap = new HashMap<>();
+        Map<MobEffect, MobEffectInstance> uniqueEffectsMap = new HashMap<>();
         for (MobEffectInstance effectInstance : combinedEffects) {
             Holder<MobEffect> effect = effectInstance.getEffect();
-            if (!uniqueEffectsMap.containsKey(effect) || effectInstance.getAmplifier() > uniqueEffectsMap.get(effect).getAmplifier()) {
-                uniqueEffectsMap.put(effect, new MobEffectInstance(effect, effectInstance.getDuration(), effectInstance.getAmplifier()));
+            if (!uniqueEffectsMap.containsKey(effect.value()) || effectInstance.getAmplifier() > uniqueEffectsMap.get(effect).getAmplifier()) {
+                uniqueEffectsMap.put(effect.value(), new MobEffectInstance(effect, effectInstance.getDuration(), effectInstance.getAmplifier()));
             }
         }
 
         ItemStack outputPotion = new ItemStack(ObjectRegistry.FLASK.get());
-        CompoundTag outputTag = outputPotion.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        outputPotion.
-        ListTag newEffectsList = new ListTag();
+        PotionContents newEffectsData = outputPotion.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
 
         RandomSource random = world != null ? world.getRandom() : RandomSource.create();
         int randomTexture = random.nextInt(6) + 1;
-        outputTag.putInt("CustomModelData", randomTexture);
+        CustomModelData outputData = new CustomModelData(randomTexture);
+        outputPotion.set(DataComponents.CUSTOM_MODEL_DATA, outputData);
 
         for (MobEffectInstance effectInstance : uniqueEffectsMap.values()) {
-            CompoundTag effectTag = new CompoundTag();
-            int effectId = BuiltInRegistries.MOB_EFFECT.getId(effectInstance.getEffect().value());
-            if (effectId != -1) {
-                effectTag.putInt("Id", effectId);
-                effectTag.putByte("Amplifier", (byte) effectInstance.getAmplifier());
-                effectTag.putInt("Duration", effectInstance.getDuration());
-                newEffectsList.add(effectTag);
-            }
+            newEffectsData.forEachEffect(mobEffectInstance -> {
+                mobEffectInstance.update(effectInstance);
+            });
         }
 
-        outputTag.put("CustomPotionEffects", newEffectsList);
+        outputPotion.set(DataComponents.POTION_CONTENTS, newEffectsData);
         setItem(3, outputPotion);
 
         for (int i = 0; i < 3; i++) {

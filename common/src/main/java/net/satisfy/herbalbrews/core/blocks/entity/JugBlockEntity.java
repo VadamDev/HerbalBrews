@@ -1,8 +1,11 @@
 package net.satisfy.herbalbrews.core.blocks.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.resources.ResourceLocation;
@@ -10,6 +13,7 @@ import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import net.minecraft.world.level.block.state.BlockState;
@@ -78,13 +82,12 @@ public class JugBlockEntity extends BlockEntity {
     public void applyEffects(LivingEntity user, int durationTicks) {
         for (ItemStack drink : drinks) {
             if (drink.getItem() instanceof DrinkBlockItem) {
-                CompoundTag tag = drink.getTag();
-                if (tag != null && tag.contains("Effect") && tag.contains("EffectDuration")) {
-                    ResourceLocation effectId = new ResourceLocation(tag.getString("Effect"));
-                    MobEffect effect = BuiltInRegistries.MOB_EFFECT.get(effectId);
-                    if (effect != null) {
-                        user.addEffect(new MobEffectInstance(effect, durationTicks));
-                    }
+                PotionContents data = drink.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+                if (data.hasEffects()) {
+                    data.forEachEffect(mobEffectInstance -> {
+                        mobEffectInstance.duration = durationTicks;
+                        user.addEffect(mobEffectInstance);
+                    });
                 }
             }
         }
