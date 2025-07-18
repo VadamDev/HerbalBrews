@@ -7,6 +7,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -40,6 +41,10 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
     @Override
     public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
+    }
+
+    public @NotNull ResourceLocation getId() {
+        return RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.getId();
     }
 
     @Override

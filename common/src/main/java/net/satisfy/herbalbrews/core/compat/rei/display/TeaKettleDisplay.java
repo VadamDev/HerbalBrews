@@ -18,7 +18,7 @@ public class TeaKettleDisplay extends BasicDisplay {
     private static final int REQUIRED_INPUT_SLOTS = 4;
 
     public TeaKettleDisplay(TeaKettleRecipe recipe) {
-        super(prepareInputs(recipe), Collections.singletonList(EntryIngredients.of(recipe.getResultItem(null))), Optional.empty());
+        super(prepareInputs(recipe), Collections.singletonList(EntryIngredients.of(recipe.getResultItem(null))), Optional.of(recipe.getId()));
     }
 
     private static List<EntryIngredient> prepareInputs(TeaKettleRecipe recipe) {

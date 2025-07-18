@@ -52,6 +52,10 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
         return assemble(null, null);
     }
 
+    public @NotNull ResourceLocation getId() {
+        return RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.getId();
+    }
+
     @Override
     public boolean matches(TeaKettleRecipeInput recipeInput, Level level) {
         return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) && waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput);

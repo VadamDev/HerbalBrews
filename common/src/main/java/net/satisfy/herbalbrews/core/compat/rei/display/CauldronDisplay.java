@@ -11,7 +11,6 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.satisfy.herbalbrews.HerbalBrews;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
@@ -25,7 +24,7 @@ public class CauldronDisplay extends BasicDisplay {
     public static final CategoryIdentifier<CauldronDisplay> CAULDRON_DISPLAY = CategoryIdentifier.of(HerbalBrews.MOD_ID, "cauldron_display");
 
     public CauldronDisplay(CauldronRecipe recipe) {
-        super(createInputs(), createOutputs(), Optional.empty());
+        super(createInputs(), createOutputs(), Optional.of(recipe.getId()));
     }
 
     private static List<EntryIngredient> createInputs() {
