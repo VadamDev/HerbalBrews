@@ -1,5 +1,6 @@
 package net.satisfy.herbalbrews.client;
 
+import dev.architectury.platform.Platform;
 import dev.architectury.registry.client.level.entity.EntityModelLayerRegistry;
 import dev.architectury.registry.client.rendering.BlockEntityRendererRegistry;
 import dev.architectury.registry.client.rendering.RenderTypeRegistry;
@@ -33,8 +34,10 @@ public class HerbalbrewsClient {
         );
 
 
-        MenuRegistry.registerScreenFactory(MenuTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), TeaKettleGui::new);
-        MenuRegistry.registerScreenFactory(MenuTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), CauldronGui::new);
+        if (Platform.isFabric()) {
+            MenuRegistry.registerScreenFactory(MenuTypeRegistry.TEA_KETTLE_SCREEN_HANDLER.get(), TeaKettleGui::new);
+            MenuRegistry.registerScreenFactory(MenuTypeRegistry.CAULDRON_SCREEN_HANDLER.get(), CauldronGui::new);
+        }
         BlockEntityRendererRegistry.register(EntityTypeRegistry.HERBALBREWS_BANNER.get(), CompletionistBannerRenderer::new);
     }
 
