@@ -2,9 +2,12 @@ package net.satisfy.herbalbrews.core.recipe;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.GsonHelper;
 import net.minecraft.world.Container;
@@ -103,6 +106,16 @@ public class CauldronRecipe implements Recipe<Container> {
             }
 
             buf.writeItem(recipe.output);
+        }
+
+        @Override
+        public MapCodec<CauldronRecipe> codec() {
+            return null;
+        }
+
+        @Override
+        public StreamCodec<RegistryFriendlyByteBuf, CauldronRecipe> streamCodec() {
+            return null;
         }
     }
 }

@@ -1,5 +1,6 @@
 package net.satisfy.herbalbrews.core.effects;
 
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectCategory;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -47,7 +48,7 @@ public class LifeleechEffect extends MobEffect {
     }
 
     private void applyEffect(Player player, int amplifier) {
-        player.addEffect(new MobEffectInstance(this, 200, amplifier, false, false, false));
+        player.addEffect(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(this), 200, amplifier, false, false, false));
     }
 
     private boolean isAffectedEntity(Player player) {
