@@ -1,15 +1,13 @@
 package net.satisfy.herbalbrews.forge.config;
 
-import com.electronwill.nightconfig.core.file.CommentedFileConfig;
-import com.electronwill.nightconfig.core.io.WritingMode;
 import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.fml.event.config.ModConfigEvent;
 import net.neoforged.neoforge.common.ModConfigSpec;
+import net.satisfy.herbalbrews.HerbalBrews;
 
-
-import java.io.File;
-
-public class HerbalBrewsForgeConfig {
+@EventBusSubscriber(modid = HerbalBrews.MOD_ID, bus = EventBusSubscriber.Bus.MOD)
+public class HerbalBrewsNeoForgeConfig {
     public static final ModConfigSpec COMMON_CONFIG;
 
     public static final ModConfigSpec.BooleanValue ITEMS_BANNER_GIVE_EFFECT;
@@ -44,7 +42,7 @@ public class HerbalBrewsForgeConfig {
                 .defineInRange("damageReductionAmount", 40, 0, 100);
         builder.pop();
 
-        builder.pop(); 
+        builder.pop();
 
         builder.push("blocks");
         BLOCKS_DRYING_DURATION = builder
@@ -69,14 +67,23 @@ public class HerbalBrewsForgeConfig {
     public static void onReload(final ModConfigEvent.Reloading configEvent) {
     }
 
-    public static void loadConfig(ModConfigSpec spec, String path) {
-        final CommentedFileConfig file = CommentedFileConfig.builder(new File(path))
-                .sync()
-                .preserveInsertionOrder()
-                .autosave()
-                .writingMode(WritingMode.REPLACE)
-                .build();
-        file.load();
-        spec.correct(file);
+    public static boolean itemsBannerGiveEffect;
+    public static boolean itemsBannerShowTooltip;
+    public static boolean itemsHatDamageReductionEnabled;
+    public static int itemsHatDamageReductionAmount;
+
+    public static int blocksDryingDuration;
+    public static int blocksBrewingDuration;
+    public static int blocksJugEffectDuration;
+
+    @SubscribeEvent
+    static void onLoad(final ModConfigEvent event) {
+        itemsBannerGiveEffect = ITEMS_BANNER_GIVE_EFFECT.get();
+        itemsBannerShowTooltip = ITEMS_BANNER_SHOW_TOOLTIP.get();
+        itemsHatDamageReductionEnabled = ITEMS_HAT_DAMAGE_REDUCTION_ENABLED.get();
+        itemsHatDamageReductionAmount = ITEMS_HAT_DAMAGE_REDUCTION_AMOUNT.get();
+        blocksDryingDuration = BLOCKS_DRYING_DURATION.get();
+        blocksBrewingDuration = BLOCKS_BREWING_DURATION.get();
+        blocksJugEffectDuration = BLOCKS_JUG_EFFECT_DURATION.get();
     }
 }
