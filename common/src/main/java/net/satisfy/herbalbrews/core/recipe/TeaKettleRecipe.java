@@ -1,28 +1,19 @@
 package net.satisfy.herbalbrews.core.recipe;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.effect.MobEffect;
-import net.satisfy.herbalbrews.core.blocks.entity.TeaKettleBlockEntity;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class TeaKettleRecipe implements Recipe<Container> {
+public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
     private final NonNullList<Ingredient> inputs;
     private final ItemStack output;
     private final MobEffect effect;
@@ -41,23 +32,12 @@ public class TeaKettleRecipe implements Recipe<Container> {
         this.requiredDuration = requiredDuration;
     }
 
-    @Override
-    public boolean matches(Container inventory, Level world) {
-        return HerbalBrewsUtil.matchesRecipe(inventory, inputs, 0, 5) && waterLevelSufficient(inventory) && heatLevelSufficient(inventory);
+    private boolean waterLevelSufficient(TeaKettleRecipeInput teaKettleRecipeInput) {
+        return teaKettleRecipeInput.getWaterLevel() >= requiredWater;
     }
 
-    private boolean waterLevelSufficient(Container inventory) {
-        if (inventory instanceof TeaKettleBlockEntity teaKettle) {
-            return teaKettle.getWaterLevel() >= requiredWater;
-        }
-        return false;
-    }
-
-    private boolean heatLevelSufficient(Container inventory) {
-        if (inventory instanceof TeaKettleBlockEntity teaKettle) {
-            return teaKettle.getHeatLevel() >= requiredHeat;
-        }
-        return false;
+    private boolean heatLevelSufficient(TeaKettleRecipeInput teaKettleRecipeInput) {
+        return teaKettleRecipeInput.getHeatLevel() >= requiredHeat;
     }
 
     public ItemStack assemble() {
@@ -65,7 +45,12 @@ public class TeaKettleRecipe implements Recipe<Container> {
     }
 
     @Override
-    public ItemStack assemble(Container recipeInput, HolderLookup.Provider provider) {
+    public boolean matches(TeaKettleRecipeInput recipeInput, Level level) {
+        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) && waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput);
+    }
+
+    @Override
+    public ItemStack assemble(TeaKettleRecipeInput recipeInput, HolderLookup.Provider provider) {
         return this.output.copy();
     }
 

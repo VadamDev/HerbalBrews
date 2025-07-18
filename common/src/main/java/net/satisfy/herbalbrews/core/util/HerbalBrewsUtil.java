@@ -16,6 +16,7 @@ import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.BooleanOp;
@@ -70,11 +71,11 @@ public class HerbalBrewsUtil {
         return ingredients;
     }*/
 
-    public static boolean matchesRecipe(Container inventory, NonNullList<Ingredient> recipe, int startIndex, int endIndex) {
+    public static boolean matchesRecipe(RecipeInput recipeInput, NonNullList<Ingredient> recipe, int startIndex, int endIndex) {
         List<ItemStack> validStacks = new ArrayList<>();
 
         for(int i = startIndex; i <= endIndex; ++i) {
-            ItemStack stackInSlot = inventory.getItem(i);
+            ItemStack stackInSlot = recipeInput.getItem(i);
             if (!stackInSlot.isEmpty()) {
                 validStacks.add(stackInSlot);
             }

@@ -31,13 +31,17 @@ public class HerbalBrewsReiClientPlugin {
     }
 
     public static void registerDisplays(DisplayRegistry registry) {
+        // TODO fixme
+        /*
         registry.registerFiller(TeaKettleRecipe.class, TeaKettleDisplay::new);
-        registry.registerFiller(CauldronRecipe.class, CauldronDisplay::new);
+        registry.registerFiller(CauldronRecipe.class, CauldronDisplay::new);*/
     }
 
+    // TODO fixme
+    /*
     public static List<Ingredient> ingredients(Recipe<Container> recipe, ItemStack stack){
         List<Ingredient> l = new ArrayList<>(recipe.getIngredients());
         l.add(0, Ingredient.of(stack.getItem()));
         return l;
-    }
+    }*/
 }

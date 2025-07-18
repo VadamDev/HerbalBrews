@@ -21,7 +21,7 @@ import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class CauldronRecipe implements Recipe<Container> {
+public class CauldronRecipe implements Recipe<CauldronRecipeInput> {
 
     private final NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs;
     private final ItemStack output;
@@ -32,12 +32,12 @@ public class CauldronRecipe implements Recipe<Container> {
     }
 
     @Override
-    public boolean matches(Container inventory, Level world) {
+    public boolean matches(CauldronRecipeInput recipeInput, Level level) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(Container recipeInput, HolderLookup.Provider provider) {
+    public ItemStack assemble(CauldronRecipeInput recipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
