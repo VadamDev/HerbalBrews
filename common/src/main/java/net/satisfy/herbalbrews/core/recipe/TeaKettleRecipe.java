@@ -9,11 +9,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.effect.MobEffect;
+import net.satisfy.herbalbrews.core.blocks.entity.TeaKettleBlockEntity;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
+public class TeaKettleRecipe implements Recipe<TeaKettleBlockEntity> {
     private final NonNullList<Ingredient> inputs;
     private final ItemStack output;
     private final MobEffect effect;
@@ -32,11 +33,11 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
         this.requiredDuration = requiredDuration;
     }
 
-    private boolean waterLevelSufficient(TeaKettleRecipeInput teaKettleRecipeInput) {
+    private boolean waterLevelSufficient(TeaKettleBlockEntity teaKettleRecipeInput) {
         return teaKettleRecipeInput.getWaterLevel() >= requiredWater;
     }
 
-    private boolean heatLevelSufficient(TeaKettleRecipeInput teaKettleRecipeInput) {
+    private boolean heatLevelSufficient(TeaKettleBlockEntity teaKettleRecipeInput) {
         return teaKettleRecipeInput.getHeatLevel() >= requiredHeat;
     }
 
@@ -45,12 +46,12 @@ public class TeaKettleRecipe implements Recipe<TeaKettleRecipeInput> {
     }
 
     @Override
-    public boolean matches(TeaKettleRecipeInput recipeInput, Level level) {
+    public boolean matches(TeaKettleBlockEntity recipeInput, Level level) {
         return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) && waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput);
     }
 
     @Override
-    public ItemStack assemble(TeaKettleRecipeInput recipeInput, HolderLookup.Provider provider) {
+    public ItemStack assemble(TeaKettleBlockEntity recipeInput, HolderLookup.Provider provider) {
         return this.output.copy();
     }
 

@@ -1,27 +1,20 @@
 package net.satisfy.herbalbrews.core.recipe;
 
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParseException;
 import com.mojang.serialization.MapCodec;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.RegistryAccess;
-import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.GsonHelper;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
+import net.satisfy.herbalbrews.core.blocks.entity.CauldronBlockEntity;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
-import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
 
-public class CauldronRecipe implements Recipe<CauldronRecipeInput> {
+public class CauldronRecipe implements Recipe<CauldronBlockEntity> {
 
     private final NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs;
     private final ItemStack output;
@@ -32,20 +25,20 @@ public class CauldronRecipe implements Recipe<CauldronRecipeInput> {
     }
 
     @Override
-    public boolean matches(CauldronRecipeInput recipeInput, Level level) {
-        return false;
-    }
-
-    @Override
-    public ItemStack assemble(CauldronRecipeInput recipeInput, HolderLookup.Provider provider) {
-        return ItemStack.EMPTY;
-    }
-
-    @Override
     public @NotNull NonNullList<net.minecraft.world.item.crafting.Ingredient> getIngredients() {
         return this.inputs;
     }
 
+
+    @Override
+    public boolean matches(CauldronBlockEntity recipeInput, Level level) {
+        return false;
+    }
+
+    @Override
+    public ItemStack assemble(CauldronBlockEntity recipeInput, HolderLookup.Provider provider) {
+        return ItemStack.EMPTY;
+    }
 
     @Override
     public boolean canCraftInDimensions(int width, int height) {

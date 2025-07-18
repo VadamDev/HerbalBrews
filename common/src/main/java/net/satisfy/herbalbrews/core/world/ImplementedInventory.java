@@ -6,22 +6,12 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-@FunctionalInterface
-public interface ImplementedInventory extends WorldlyContainer {
+public interface ImplementedInventory extends RecipeInput, WorldlyContainer {
     NonNullList<ItemStack> getItems();
-
-    static ImplementedInventory of(NonNullList<ItemStack> items) {
-        return () -> {
-            return items;
-        };
-    }
-
-    static ImplementedInventory ofSize(int size) {
-        return of(NonNullList.withSize(size, ItemStack.EMPTY));
-    }
 
     default void setChanged() {
     }
@@ -41,6 +31,7 @@ public interface ImplementedInventory extends WorldlyContainer {
         return true;
     }
 
+    @Override
     default @NotNull ItemStack getItem(int slot) {
         return (ItemStack)this.getItems().get(slot);
     }
@@ -90,6 +81,11 @@ public interface ImplementedInventory extends WorldlyContainer {
 
     default boolean stillValid(Player player) {
         return true;
+    }
+
+    @Override
+    default int size() {
+        return getItems().size();
     }
 }
 
