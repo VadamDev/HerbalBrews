@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -253,27 +254,26 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             }
         }
 
-        // TODO fixme
-        /*
-        TeaKettleRecipe recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), this, world).orElse(null);
-        boolean canCraft = canCraft(recipe);
+        RecipeHolder<TeaKettleRecipe> recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), this, world).orElse(null);
+        assert recipe != null;
+        boolean canCraft = canCraft(recipe.value());
 
         if (canCraft) {
             if (requiredDuration <= 0) {
-                requiredDuration = recipe.getRequiredDuration();
+                requiredDuration = recipe.value().getRequiredDuration();
                 cookingTime = 0;
             } else {
                 cookingTime++;
                 if (cookingTime >= requiredDuration) {
                     cookingTime = 0;
-                    craft(recipe);
+                    craft(recipe.value());
                 }
             }
             world.setBlock(pos, state.setValue(TeaKettleBlock.COOKING, true).setValue(TeaKettleBlock.LIT, this.isBeingBurned), Block.UPDATE_ALL);
         } else {
             this.cookingTime = 0;
             world.setBlock(pos, state.setValue(TeaKettleBlock.COOKING, false), Block.UPDATE_ALL);
-        }*/
+        }
 
         if (!getItem(WATER_SLOT).isEmpty()) {
             ItemStack waterItem = getItem(WATER_SLOT);
