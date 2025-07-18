@@ -7,6 +7,7 @@ import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.satisfy.herbalbrews.core.compat.rei.category.CauldronCategory;
 import net.satisfy.herbalbrews.core.compat.rei.category.TeaKettleCategory;
 import net.satisfy.herbalbrews.core.compat.rei.display.CauldronDisplay;
@@ -31,17 +32,13 @@ public class HerbalBrewsReiClientPlugin {
     }
 
     public static void registerDisplays(DisplayRegistry registry) {
-        // TODO fixme
-        /*
         registry.registerFiller(TeaKettleRecipe.class, TeaKettleDisplay::new);
-        registry.registerFiller(CauldronRecipe.class, CauldronDisplay::new);*/
+        registry.registerFiller(CauldronRecipe.class, CauldronDisplay::new);
     }
 
-    // TODO fixme
-    /*
-    public static List<Ingredient> ingredients(Recipe<Container> recipe, ItemStack stack){
+    public static List<Ingredient> ingredients(Recipe<RecipeInput> recipe, ItemStack stack){
         List<Ingredient> l = new ArrayList<>(recipe.getIngredients());
         l.add(0, Ingredient.of(stack.getItem()));
         return l;
-    }*/
+    }
 }

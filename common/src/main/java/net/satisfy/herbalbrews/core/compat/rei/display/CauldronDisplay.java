@@ -24,8 +24,8 @@ public class CauldronDisplay extends BasicDisplay {
 
     public static final CategoryIdentifier<CauldronDisplay> CAULDRON_DISPLAY = CategoryIdentifier.of(HerbalBrews.MOD_ID, "cauldron_display");
 
-    public CauldronDisplay(RecipeHolder<CauldronRecipe> recipe) {
-        super(createInputs(), createOutputs(), Optional.of(recipe.id()));
+    public CauldronDisplay(CauldronRecipe recipe) {
+        super(createInputs(), createOutputs(), Optional.empty());
     }
 
     private static List<EntryIngredient> createInputs() {

@@ -7,7 +7,9 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.satisfy.herbalbrews.client.gui.handler.CauldronGuiHandler;
 import net.satisfy.herbalbrews.client.gui.handler.TeaKettleGuiHandler;
@@ -15,12 +17,14 @@ import net.satisfy.herbalbrews.core.compat.jei.category.CauldronCategory;
 import net.satisfy.herbalbrews.core.compat.jei.category.TeaKettleCategory;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
+import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipeInput;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.ScreenHandlerTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -34,12 +38,19 @@ public class HerbalBrewsJEIPlugin implements IModPlugin {
 
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
-        // TODO fixme
-        /*List<TeaKettleRecipe> cookingCauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
-        registration.addRecipes(TeaKettleCategory.TEA_KETTLE_TYPE, cookingCauldronRecipes);
+        List<RecipeHolder<TeaKettleRecipe>> cookingCauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
+        List<TeaKettleRecipe> teaKettleRecipes = new ArrayList<>();
+        cookingCauldronRecipes.iterator().forEachRemaining(recipeHolder -> {
+            teaKettleRecipes.add(recipeHolder.value());
+        });
+        registration.addRecipes(TeaKettleCategory.TEA_KETTLE_TYPE, teaKettleRecipes);
 
-        List<CauldronRecipe> cauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.get());
-        registration.addRecipes(CauldronCategory.CAULDRON_TYPE, cauldronRecipes);*/
+        List<RecipeHolder<CauldronRecipe>> cauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.get());
+        List<CauldronRecipe> cauldronRecipeList = new ArrayList<>();
+        cauldronRecipes.iterator().forEachRemaining(recipeHolder -> {
+            cauldronRecipeList.add(recipeHolder.value());
+        });
+        registration.addRecipes(CauldronCategory.CAULDRON_TYPE, cauldronRecipeList);
     }
 
 

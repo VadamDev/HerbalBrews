@@ -6,11 +6,10 @@ import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeInput;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public interface ImplementedInventory extends RecipeInput, WorldlyContainer {
+public interface ImplementedInventory extends WorldlyContainer {
     NonNullList<ItemStack> getItems();
 
     default void setChanged() {
@@ -81,11 +80,6 @@ public interface ImplementedInventory extends RecipeInput, WorldlyContainer {
 
     default boolean stillValid(Player player) {
         return true;
-    }
-
-    @Override
-    default int size() {
-        return getItems().size();
     }
 }
 

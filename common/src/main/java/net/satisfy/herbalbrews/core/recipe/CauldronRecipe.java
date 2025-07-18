@@ -9,15 +9,15 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
-import net.satisfy.herbalbrews.core.blocks.entity.CauldronBlockEntity;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 
-public class CauldronRecipe implements Recipe<CauldronBlockEntity> {
+public class CauldronRecipe implements Recipe<RecipeInput> {
 
     private final NonNullList<net.minecraft.world.item.crafting.Ingredient> inputs;
     private final ItemStack output;
@@ -32,14 +32,13 @@ public class CauldronRecipe implements Recipe<CauldronBlockEntity> {
         return this.inputs;
     }
 
-
     @Override
-    public boolean matches(CauldronBlockEntity recipeInput, Level level) {
+    public boolean matches(RecipeInput recipeInput, Level level) {
         return false;
     }
 
     @Override
-    public ItemStack assemble(CauldronBlockEntity recipeInput, HolderLookup.Provider provider) {
+    public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
     }
 
