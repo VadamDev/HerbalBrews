@@ -1,4 +1,4 @@
-package net.satisfy.herbalbrews.forge;
+package net.satisfy.herbalbrews.neoforge;
 
 import dev.architectury.platform.hooks.EventBusesHooks;
 import net.neoforged.bus.api.IEventBus;
@@ -6,10 +6,9 @@ import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.config.ModConfig;
 import net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.neoforged.fml.loading.FMLPaths;
 import net.satisfy.herbalbrews.HerbalBrews;
 import net.satisfy.herbalbrews.core.registry.CompostableRegistry;
-import net.satisfy.herbalbrews.forge.config.HerbalBrewsNeoForgeConfig;
+import net.satisfy.herbalbrews.neoforge.config.HerbalBrewsNeoForgeConfig;
 
 @Mod(HerbalBrews.MOD_ID)
 public class HerbalBrewsNeoForge {

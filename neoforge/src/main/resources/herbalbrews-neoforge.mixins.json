@@ -1,6 +1,6 @@
 {
   "required": true,
-  "package": "net.satisfy.herbalbrews.forge.mixin",
+  "package": "net.satisfy.herbalbrews.neoforge.mixin",
   "compatibilityLevel": "JAVA_21",
   "minVersion": "0.8",
   "client": [

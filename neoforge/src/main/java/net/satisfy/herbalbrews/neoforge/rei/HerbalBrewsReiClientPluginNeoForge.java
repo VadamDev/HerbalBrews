@@ -1,4 +1,4 @@
-package net.satisfy.herbalbrews.forge.rei;
+package net.satisfy.herbalbrews.neoforge.rei;
 
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;

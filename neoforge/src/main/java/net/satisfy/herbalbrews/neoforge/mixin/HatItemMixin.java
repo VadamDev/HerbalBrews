@@ -1,4 +1,4 @@
-package net.satisfy.herbalbrews.forge.mixin;
+package net.satisfy.herbalbrews.neoforge.mixin;
 
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.Model;

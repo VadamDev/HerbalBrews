@@ -1,6 +1,6 @@
 package net.satisfy.herbalbrews.platform.neoforge;
 
-import net.satisfy.herbalbrews.forge.config.HerbalBrewsNeoForgeConfig;
+import net.satisfy.herbalbrews.neoforge.config.HerbalBrewsNeoForgeConfig;
 import net.satisfy.herbalbrews.platform.PlatformHelper;
 
 public class PlatformHelperImpl extends PlatformHelper {

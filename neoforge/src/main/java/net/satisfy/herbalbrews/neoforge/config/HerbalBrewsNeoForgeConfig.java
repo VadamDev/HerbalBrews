@@ -1,4 +1,4 @@
-package net.satisfy.herbalbrews.forge.config;
+package net.satisfy.herbalbrews.neoforge.config;
 
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
