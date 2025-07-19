@@ -145,7 +145,7 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
                         ItemStack.STRICT_CODEC.fieldOf("result").forGetter(teaKettleRecipe -> {
                             return teaKettleRecipe.output;
                         }), MobEffect.CODEC.fieldOf("effect").forGetter(TeaKettleRecipe::getEffect),
-                Codec.INT.fieldOf("result").fieldOf("effectduration").forGetter(TeaKettleRecipe::getEffectDuration),
+                Codec.INT.fieldOf("effectduration").forGetter(TeaKettleRecipe::getEffectDuration),
                 Codec.INT.fieldOf("fluid").fieldOf("amount").forGetter(TeaKettleRecipe::getRequiredWater),
                 Codec.INT.fieldOf("heat_needed").fieldOf("amount").forGetter(TeaKettleRecipe::getRequiredHeat),
                 Codec.INT.fieldOf("crafting_duration").forGetter(TeaKettleRecipe::getRequiredDuration)
