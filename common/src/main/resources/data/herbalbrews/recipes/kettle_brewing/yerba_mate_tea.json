@@ -2,8 +2,16 @@
   "type": "herbalbrews:kettle_brewing",
   "experience": 0.8,
   "crafting_duration": 35,
-  "fluid_amount": 20,
-  "heat_amount": 75,
+  "fluid": [
+    {
+      "amount": 20
+    }
+  ],
+  "heat_needed": [
+    {
+      "amount": 75
+    }
+  ],
   "ingredients": [
     {
       "item": "herbalbrews:yerba_mate_leaf"
@@ -18,7 +26,7 @@
   "result": {
     "item": "herbalbrews:yerba_mate_tea",
     "effect": "herbalbrews:bonding",
-    "effect_duration": 1800
+    "effectduration": 1800
   }
 }
 

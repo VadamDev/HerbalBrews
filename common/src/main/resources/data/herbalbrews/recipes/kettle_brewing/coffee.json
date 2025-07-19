@@ -2,8 +2,16 @@
   "type": "herbalbrews:kettle_brewing",
   "experience": 0.8,
   "crafting_duration": 20,
-  "fluid_amount": 20,
-  "heat_amount": 50,
+  "fluid": [
+    {
+      "amount": 20
+    }
+  ],
+  "heat_needed": [
+    {
+      "amount": 50
+    }
+  ],
   "ingredients": [
     {
       "item": "herbalbrews:coffee_beans"
@@ -15,6 +23,6 @@
   "result": {
     "item": "herbalbrews:coffee",
     "effect": "herbalbrews:deeprush",
-    "effect_duration": 1800
+    "effectduration": 1800
   }
 }
