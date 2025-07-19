@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.TagsRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -35,20 +36,20 @@ public class TeaKettleGuiHandler extends AbstractContainerMenu {
         addSlot(new Slot(container, 5, 31, 52) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(TagsRegistry.CONTAINER_ITEMS);
+                return stack.is(TagsRegistry.CONTAINER_ITEMS) || stack.is(Items.GLASS_BOTTLE);
             }
         });
         addSlot(new Slot(container, 6, 118, 43) {
 
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(TagsRegistry.SMALL_WATER_FILL) || stack.is(TagsRegistry.LARGE_WATER_FILL);
+                return stack.is(TagsRegistry.SMALL_WATER_FILL) || stack.is(TagsRegistry.LARGE_WATER_FILL) || TagsRegistry.isWaterFill(stack);
             }
         });
         addSlot(new Slot(container, 7, 95, 58) {
             @Override
             public boolean mayPlace(ItemStack stack) {
-                return stack.is(TagsRegistry.HEAT_ITEMS);
+                return stack.is(TagsRegistry.HEAT_ITEMS) || stack.is(Items.BLAZE_POWDER);
             }
         });
         for (int i = 0; i < 3; i++) {
@@ -106,15 +107,15 @@ public class TeaKettleGuiHandler extends AbstractContainerMenu {
             slot.onQuickCraft(item, copy);
         } else {
             if (index < this.slots.size()) {
-                if (item.is(TagsRegistry.CONTAINER_ITEMS)) {
+                if (item.is(TagsRegistry.CONTAINER_ITEMS) || item.is(Items.GLASS_BOTTLE)) {
                     if (!this.moveItemStackTo(item, 5, 6, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (item.is(TagsRegistry.HEAT_ITEMS)) {
+                } else if (item.is(TagsRegistry.HEAT_ITEMS) || item.is(Items.BLAZE_POWDER)) {
                     if (!this.moveItemStackTo(item, 7, 8, false)) {
                         return ItemStack.EMPTY;
                     }
-                } else if (item.is(TagsRegistry.SMALL_WATER_FILL) || item.is(TagsRegistry.LARGE_WATER_FILL)) {
+                } else if (item.is(TagsRegistry.SMALL_WATER_FILL) || item.is(TagsRegistry.LARGE_WATER_FILL) || TagsRegistry.isWaterFill(item)) {
                     if (!this.moveItemStackTo(item, 6, 7, false)) {
                         return ItemStack.EMPTY;
                     }

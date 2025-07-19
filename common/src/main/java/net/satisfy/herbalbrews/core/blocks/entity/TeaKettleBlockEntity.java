@@ -19,6 +19,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -203,7 +204,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
     public void consumeHeatItem() {
         ItemStack heatingItem = inventory.get(HEATING_SLOT);
-        if (!heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS)) {
+        if (!heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS) || ((!heatingItem.isEmpty() && heatingItem.is(Items.BLAZE_POWDER)))) {
             heatingItem.shrink(1);
             inventory.set(HEATING_SLOT, heatingItem);
             doEffect = true;
@@ -241,7 +242,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
         ItemStack heatingItem = getItem(HEATING_SLOT);
 
-        if (this.heatLevel < HEAT_CONSUMPTION_THRESHOLD && !heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS)) {
+        if (this.heatLevel < HEAT_CONSUMPTION_THRESHOLD && !heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS) || ((this.heatLevel < HEAT_CONSUMPTION_THRESHOLD && !heatingItem.isEmpty() && heatingItem.is(Items.BLAZE_POWDER)))) {
             this.heatLevel = Math.min(this.heatLevel + HEAT_PER_ITEM, MAX_HEAT_LEVEL);
             consumeHeatItem();
             setChanged();
@@ -281,7 +282,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
         if (!getItem(WATER_SLOT).isEmpty()) {
             ItemStack waterItem = getItem(WATER_SLOT);
-            if (waterItem.is(TagsRegistry.SMALL_WATER_FILL)) {
+            if (waterItem.is(TagsRegistry.SMALL_WATER_FILL) || TagsRegistry.isWaterFill(waterItem)) {
                 waterLevel = Math.min(waterLevel + 25, 100);
                 ItemStack remainderStack = getRemainderItem(waterItem);
                 waterItem.shrink(1);
@@ -348,13 +349,13 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
         if (direction == Direction.DOWN) {
             return false;
         } else {
-            if (stack.is(TagsRegistry.CONTAINER_ITEMS)) {
+            if (stack.is(TagsRegistry.CONTAINER_ITEMS) || stack.is(Items.GLASS_BOTTLE)) {
                 return index == 5;
             }
-            if (stack.is(TagsRegistry.HEAT_ITEMS)) {
+            if (stack.is(TagsRegistry.HEAT_ITEMS) || stack.is(Items.BLAZE_POWDER)) {
                 return index == 7;
             }
-            if (stack.is(TagsRegistry.SMALL_WATER_FILL) || stack.is(TagsRegistry.LARGE_WATER_FILL)) {
+            if (stack.is(TagsRegistry.SMALL_WATER_FILL) || stack.is(TagsRegistry.LARGE_WATER_FILL) || TagsRegistry.isWaterFill(stack)) {
                 return index == WATER_SLOT;
             }
             return index >= 1 && index <= 4;
