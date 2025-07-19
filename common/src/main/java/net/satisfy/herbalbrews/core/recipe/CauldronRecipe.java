@@ -37,27 +37,12 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput recipeInput, Level level) {
-        StackedContents recipeMatcher = new StackedContents();
-        int matchingStacks = 0;
-
-        for(int i = 1; i < 5; ++i) {
-            ItemStack itemStack = recipeInput.getItem(i);
-            if (!itemStack.isEmpty()) {
-                ++matchingStacks;
-                recipeMatcher.accountStack(itemStack, 1);
-            }
-        }
-
-        return matchingStacks == this.inputs.size() && recipeMatcher.canCraft(this, null);
+        return false;
     }
 
     @Override
     public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
-        return this.output.copy();
-    }
-
-    public ItemStack assemble() {
-        return assemble(null, null);
+        return ItemStack.EMPTY;
     }
 
     @Override
