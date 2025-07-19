@@ -140,9 +140,14 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
             combinedEffects.addAll(potionEffects);
         }
 
+        /**
+         * @author wdog5
+         * @reason allow potion without effect craft
+         */
+        /*
         if (combinedEffects.isEmpty()) {
             return;
-        }
+        }*/
 
         Map<Holder<MobEffect>, MobEffectInstance> uniqueEffectsMap = new HashMap<>();
         for (MobEffectInstance effectInstance : combinedEffects) {
