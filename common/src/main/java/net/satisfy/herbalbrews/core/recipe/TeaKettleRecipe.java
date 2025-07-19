@@ -11,7 +11,6 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
@@ -43,7 +42,7 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput recipeInput, Level level) {
-        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5);
+        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) /*&& waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput) TODO fixme*/;
     }
 
     @Override
@@ -134,11 +133,11 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
                             }
                         }, DataResult::success).forGetter(TeaKettleRecipe::getIngredients),
                         ItemStack.STRICT_CODEC.fieldOf("result").forGetter(teaKettleRecipe -> teaKettleRecipe.output), MobEffect.CODEC.fieldOf("effect").forGetter(TeaKettleRecipe::getEffect),
-                Codec.INT.fieldOf("effect_duration").forGetter(TeaKettleRecipe::getEffectDuration),
-                Codec.INT.fieldOf("fluid_amount").forGetter(TeaKettleRecipe::getRequiredWater),
-                Codec.INT.fieldOf("heat_amount").forGetter(TeaKettleRecipe::getRequiredHeat),
-                Codec.INT.fieldOf("crafting_duration").forGetter(TeaKettleRecipe::getRequiredDuration),
-                Codec.FLOAT.fieldOf("experience").forGetter(TeaKettleRecipe::getExperience)
+                        Codec.INT.fieldOf("effect_duration").forGetter(TeaKettleRecipe::getEffectDuration),
+                        Codec.INT.fieldOf("fluid_amount").forGetter(TeaKettleRecipe::getRequiredWater),
+                        Codec.INT.fieldOf("heat_amount").forGetter(TeaKettleRecipe::getRequiredHeat),
+                        Codec.INT.fieldOf("crafting_duration").forGetter(TeaKettleRecipe::getRequiredDuration),
+                        Codec.FLOAT.fieldOf("experience").forGetter(TeaKettleRecipe::getExperience)
                 ).apply(instance, TeaKettleRecipe::new)
         );
 
@@ -179,7 +178,6 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
             } else {
                 registryFriendlyByteBuf.writeBoolean(false);
             }
-
             registryFriendlyByteBuf.writeInt(recipe.requiredWater);
             registryFriendlyByteBuf.writeInt(recipe.requiredHeat);
             registryFriendlyByteBuf.writeInt(recipe.requiredDuration);
