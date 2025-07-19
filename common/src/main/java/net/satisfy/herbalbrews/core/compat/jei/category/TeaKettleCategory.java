@@ -127,12 +127,12 @@ public class TeaKettleCategory implements IRecipeCategory<TeaKettleRecipe> {
 
         if (containsTagIngredient(ingredients)) {
             builder.addSlot(RecipeIngredientRole.INPUT, 31 - X_OFFSET, 52 - Y_OFFSET)
-                    .addIngredients(Ingredient.of(ItemTags.bind(TagsRegistry.CONTAINER_ITEMS.location().toString())));
+                    .addIngredients(Ingredient.of(TagsRegistry.CONTAINER_ITEMS));
         }
 
         if (containsTagIngredient(ingredients)) {
             builder.addSlot(RecipeIngredientRole.INPUT, 95 - X_OFFSET, 58 - Y_OFFSET)
-                    .addIngredients(Ingredient.of(ItemTags.bind(TagsRegistry.HEAT_ITEMS.location().toString())));
+                    .addIngredients(Ingredient.of(TagsRegistry.HEAT_ITEMS));
         }
     }
 
