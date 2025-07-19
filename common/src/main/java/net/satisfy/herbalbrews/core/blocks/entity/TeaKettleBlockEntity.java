@@ -183,7 +183,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
         ItemStack recipeOutput = recipe.assemble();
         if (recipe.getEffect() != null && recipe.getEffectDuration() > 0) {
             PotionContents data = recipeOutput.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-            data.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(recipe.getEffect().value()), recipe.getEffectDuration()));
+            data.withEffectAdded(new MobEffectInstance(recipe.getEffect(), recipe.getEffectDuration()));
             recipeOutput.set(DataComponents.POTION_CONTENTS, data);
         }
         ItemStack outputSlotStack = this.getItem(OUTPUT_SLOT);

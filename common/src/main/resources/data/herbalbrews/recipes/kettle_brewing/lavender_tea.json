@@ -2,16 +2,8 @@
   "type": "herbalbrews:kettle_brewing",
   "experience": 0.8,
   "crafting_duration": 60,
-  "fluid": [
-    {
-      "amount": 20
-    }
-  ],
-  "heat_needed": [
-    {
-      "amount": 0
-    }
-  ],
+  "fluid_amount": 20,
+  "heat_amount": 0,
   "ingredients": [
     {
       "item": "herbalbrews:lavender_blossom"
@@ -24,8 +16,8 @@
     }
   ],
   "result": {
-    "item": "herbalbrews:lavender_tea",
-    "effect": "herbalbrews:feral",
-    "effectduration": 1800
-  }
+    "item": "herbalbrews:lavender_tea"
+  },
+  "effect": "herbalbrews:feral",
+  "effect_duration": 1800
 }
