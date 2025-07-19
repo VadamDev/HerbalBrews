@@ -175,7 +175,6 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
             if (recipe.effect != null) {
                 registryFriendlyByteBuf.writeBoolean(true);
                 registryFriendlyByteBuf.writeResourceLocation(recipe.effect.value().getDescriptionId().contains(":") ? ResourceLocation.parse(recipe.effect.value().getDescriptionId().split(":")[1]) : ResourceLocation.withDefaultNamespace("unknown"));
-                MobEffect.STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.effect);
                 registryFriendlyByteBuf.writeInt(recipe.effectDuration);
             } else {
                 registryFriendlyByteBuf.writeBoolean(false);
