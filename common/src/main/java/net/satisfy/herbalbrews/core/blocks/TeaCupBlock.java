@@ -82,7 +82,12 @@ public class TeaCupBlock extends Block implements EntityBlock {
                 if (drinkBlockEntity.components() != null && !drinkBlockEntity.components().isEmpty()) {
                     stack.set(DataComponents.POTION_CONTENTS, drinkBlockEntity.components().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY));
                 }
-                popResource(world, pos, stack);
+                // @author wdog5 - fix player when creative mode still drop resource
+                LocalPlayer player = Minecraft.getInstance().player;
+                if (player != null && !player.getAbilities().instabuild) {
+                    popResource(world, pos, stack);
+                }
+                // @author wdog5 end
             }
             super.onRemove(state, world, pos, newState, isMoving);
         }
