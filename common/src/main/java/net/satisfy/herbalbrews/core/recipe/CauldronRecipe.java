@@ -16,8 +16,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.Level;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
-import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
-import net.satisfy.herbalbrews.core.util.StreamCodecUtil;
 import org.jetbrains.annotations.NotNull;
 
 public class CauldronRecipe implements Recipe<RecipeInput> {
@@ -35,24 +33,15 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
         return this.inputs;
     }
 
+
     @Override
     public boolean matches(RecipeInput recipeInput, Level level) {
-        int nonEmptySlots = 0;
-        for (int i = 0; i < recipeInput.size(); i++) {
-            if (!recipeInput.getItem(i).isEmpty()) {
-                nonEmptySlots++;
-            }
-        }
-        return nonEmptySlots >= 1 && nonEmptySlots <= inputs.size() && HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 3);
+        return false;
     }
 
     @Override
     public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
         return ItemStack.EMPTY;
-    }
-
-    public @NotNull ResourceLocation getId() {
-        return RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.getId();
     }
 
     @Override
@@ -63,6 +52,10 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
     @Override
     public ItemStack getResultItem(HolderLookup.Provider provider) {
         return this.output.copy();
+    }
+
+    public @NotNull ResourceLocation getId() {
+        return RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.getId();
     }
 
     @Override
@@ -82,26 +75,47 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
 
     public static class Serializer implements RecipeSerializer<CauldronRecipe> {
 
-        private final MapCodec<CauldronRecipe> codec = RecordCodecBuilder.mapCodec(instance -> instance.group(
-                        Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
-                            Ingredient[] ingredients = list.toArray(Ingredient[]::new);
-                            if (ingredients.length == 0) {
-                                return DataResult.error(() -> "No ingredients for shapeless recipe");
-                            }
-                            return DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
-                        }, DataResult::success).forGetter(CauldronRecipe::getIngredients),
-                        ItemStack.CODEC.fieldOf("result").forGetter(recipe -> recipe.output)
+        public static final StreamCodec<RegistryFriendlyByteBuf, CauldronRecipe> STREAM_CODEC =
+                StreamCodec.of(Serializer::toNetwork, Serializer::fromNetwork);
+
+        public static final MapCodec<CauldronRecipe> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+                Ingredient.CODEC_NONEMPTY.listOf().fieldOf("ingredients").flatXmap(list -> {
+                    Ingredient[] ingredients = list.toArray(Ingredient[]::new);
+                    if (ingredients.length == 0) {
+                        return DataResult.error(() -> "No ingredients for Cauldron recipe");
+                    } else {
+                        return ingredients.length > 3 ? DataResult.error(() -> {
+                            return "Too many ingredients for Cauldron recipe";
+                        }) : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
+                    }
+                }, DataResult::success).forGetter(CauldronRecipe::getIngredients),
+                ItemStack.STRICT_CODEC.fieldOf("result").forGetter(cauldronRecipe -> {
+                    return cauldronRecipe.output;
+                })
                 ).apply(instance, CauldronRecipe::new)
         );
 
-        public final StreamCodec<RegistryFriendlyByteBuf, CauldronRecipe> STREAM_CODEC = StreamCodec.composite(
-                StreamCodecUtil.nonNullList(Ingredient.CONTENTS_STREAM_CODEC, Ingredient.EMPTY), CauldronRecipe::getIngredients,
-                ItemStack.STREAM_CODEC, recipe -> recipe.output,
-                CauldronRecipe::new);
+        public static @NotNull CauldronRecipe fromNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf) {
+            int i = registryFriendlyByteBuf.readVarInt();
+            NonNullList<Ingredient> nonNullList = NonNullList.withSize(i, Ingredient.EMPTY);
+            nonNullList.replaceAll((ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.decode(registryFriendlyByteBuf));
+            ItemStack itemStack = ItemStack.STREAM_CODEC.decode(registryFriendlyByteBuf);
+            return new CauldronRecipe(nonNullList, itemStack);
+        }
+
+        public static void toNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf, CauldronRecipe recipe) {
+            registryFriendlyByteBuf.writeVarInt(recipe.getIngredients().size());
+
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                Ingredient.CONTENTS_STREAM_CODEC.encode(registryFriendlyByteBuf, ingredient);
+            }
+
+            ItemStack.STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.output);
+        }
 
         @Override
         public MapCodec<CauldronRecipe> codec() {
-            return codec;
+            return CODEC;
         }
 
         @Override
