@@ -80,20 +80,20 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
     }
 
     @Override
-    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
-        super.loadAdditional(nbt, provider);
+    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.loadAdditional(compoundTag, provider);
         this.inventory = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        ContainerHelper.loadAllItems(nbt, this.inventory, provider);
-        this.brewingTime = nbt.getInt("BrewingTime");
-        this.totalBrewingTime = nbt.getInt("TotalBrewingTime");
+        ContainerHelper.loadAllItems(compoundTag, this.inventory, provider);
+        this.brewingTime = compoundTag.getInt("BrewingTime");
+        this.totalBrewingTime = compoundTag.getInt("TotalBrewingTime");
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
-        super.saveAdditional(nbt, provider);
-        ContainerHelper.saveAllItems(nbt, this.inventory, provider);
-        nbt.putInt("BrewingTime", this.brewingTime);
-        nbt.putInt("TotalBrewingTime", this.totalBrewingTime);
+    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
+        super.saveAdditional(compoundTag, provider);
+        ContainerHelper.saveAllItems(compoundTag, this.inventory, provider);
+        compoundTag.putInt("BrewingTime", this.brewingTime);
+        compoundTag.putInt("TotalBrewingTime", this.totalBrewingTime);
     }
 
     @Override
@@ -144,29 +144,26 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
             return;
         }
 
-        Map<MobEffect, MobEffectInstance> uniqueEffectsMap = new HashMap<>();
+        Map<Holder<MobEffect>, MobEffectInstance> uniqueEffectsMap = new HashMap<>();
         for (MobEffectInstance effectInstance : combinedEffects) {
             Holder<MobEffect> effect = effectInstance.getEffect();
-            if (!uniqueEffectsMap.containsKey(effect.value()) || effectInstance.getAmplifier() > uniqueEffectsMap.get(effect).getAmplifier()) {
-                uniqueEffectsMap.put(effect.value(), new MobEffectInstance(effect, effectInstance.getDuration(), effectInstance.getAmplifier()));
+            if (!uniqueEffectsMap.containsKey(effect) || effectInstance.getAmplifier() > uniqueEffectsMap.get(effect).getAmplifier()) {
+                uniqueEffectsMap.put(effect, new MobEffectInstance(effect, effectInstance.getDuration(), effectInstance.getAmplifier()));
             }
         }
 
         ItemStack outputPotion = new ItemStack(ObjectRegistry.FLASK.get());
-        PotionContents newEffectsData = outputPotion.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+        PotionContents potionContents = outputPotion.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
 
         RandomSource random = world != null ? world.getRandom() : RandomSource.create();
         int randomTexture = random.nextInt(6) + 1;
-        CustomModelData outputData = new CustomModelData(randomTexture);
-        outputPotion.set(DataComponents.CUSTOM_MODEL_DATA, outputData);
+        outputPotion.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(randomTexture));
 
         for (MobEffectInstance effectInstance : uniqueEffectsMap.values()) {
-            newEffectsData.forEachEffect(mobEffectInstance -> {
-                mobEffectInstance.update(effectInstance);
-            });
+            potionContents.customEffects().add(effectInstance);
         }
 
-        outputPotion.set(DataComponents.POTION_CONTENTS, newEffectsData);
+        outputPotion.set(DataComponents.POTION_CONTENTS, potionContents);
         setItem(3, outputPotion);
 
         for (int i = 0; i < 3; i++) {
