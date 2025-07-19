@@ -171,8 +171,8 @@ public class TeaKettleBlock extends BaseEntityBlock {
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
         boolean isLit = state.getValue(LIT);
-        if (isLit && !entity.fireImmune() && entity instanceof LivingEntity livingEntity && !HerbalBrewsUtil.hasFrostWalker(livingEntity)) {
-            entity.hurt(world.damageSources().hotFloor(), 1.f);
+        if (isLit && !entity.fireImmune() && entity instanceof LivingEntity livingEntity) {
+            livingEntity.hurt(world.damageSources().hotFloor(), 1.f);
         }
         super.stepOn(world, pos, state, entity);
     }

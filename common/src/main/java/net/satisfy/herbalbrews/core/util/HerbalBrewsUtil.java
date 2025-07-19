@@ -1,23 +1,17 @@
 package net.satisfy.herbalbrews.core.util;
 
-import com.google.gson.JsonArray;
 import dev.architectury.platform.Platform;
 import dev.architectury.registry.registries.DeferredRegister;
 import dev.architectury.registry.registries.Registrar;
 import dev.architectury.registry.registries.RegistrySupplier;
 import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.item.enchantment.Enchantments;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
@@ -26,7 +20,6 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 public class HerbalBrewsUtil {
@@ -89,9 +82,5 @@ public class HerbalBrewsUtil {
         } while(matches);
 
         return false;
-    }
-
-    public static boolean hasFrostWalker(LivingEntity entity) {
-        return Objects.equals(entity.getItemBySlot(EquipmentSlot.FEET).get(DataComponents.ENCHANTMENTS), Enchantments.FROST_WALKER);
     }
 }

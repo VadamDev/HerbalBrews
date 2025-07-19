@@ -29,9 +29,8 @@ public class StoveBlock extends SmokerBlock {
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
         boolean isLit = world.getBlockState(pos).getValue(LIT);
-        if (isLit && !entity.fireImmune() && entity instanceof LivingEntity livingEntity &&
-                !HerbalBrewsUtil.hasFrostWalker(livingEntity)) {
-            entity.hurt(world.damageSources().inFire(), 1.f);
+        if (isLit && !entity.fireImmune() && entity instanceof LivingEntity livingEntity) {
+            livingEntity.hurt(world.damageSources().inFire(), 1.f);
         }
 
         super.stepOn(world, pos, state, entity);

@@ -149,9 +149,8 @@ public class CauldronBlock extends Block implements EntityBlock {
 
     @Override
     public void stepOn(Level world, BlockPos pos, BlockState state, Entity entity) {
-        if (!entity.fireImmune() && entity instanceof LivingEntity livingEntity &&
-                !HerbalBrewsUtil.hasFrostWalker(livingEntity)) {
-            entity.hurt(world.damageSources().hotFloor(), 1.f);
+        if (!entity.fireImmune() && entity instanceof LivingEntity livingEntity) {
+            livingEntity.hurt(world.damageSources().hotFloor(), 1.f);
         }
 
         super.stepOn(world, pos, state, entity);
