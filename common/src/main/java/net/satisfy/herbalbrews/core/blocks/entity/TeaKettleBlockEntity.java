@@ -23,6 +23,7 @@ import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -37,7 +38,9 @@ import net.satisfy.herbalbrews.core.world.ImplementedInventory;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 
 public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInventory, MenuProvider {
     private final NonNullList<ItemStack> inventory = NonNullList.withSize(MAX_CAPACITY, ItemStack.EMPTY);
@@ -266,21 +269,20 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
                 return TeaKettleBlockEntity.this.getItems().size();
             }
         };
-        RecipeHolder<TeaKettleRecipe> recipe = world.getRecipeManager().getRecipeFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(), recipeInput, world).orElse(null);
-        if (recipe == null) {
-            return;
-        }
-        boolean canCraft = canCraft(recipe.value());
+        RecipeManager recipeManager = world.getRecipeManager();
+        List<RecipeHolder<TeaKettleRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
+        Optional<TeaKettleRecipe> recipe = Optional.ofNullable(getRecipe(recipes, inventory));
+        boolean canCraft = recipe.isPresent() && canCraft(recipe.get());
 
-        if (canCraft) {
+        if (canCraft && recipe.isPresent()) {
             if (requiredDuration <= 0) {
-                requiredDuration = recipe.value().getRequiredDuration();
+                requiredDuration = recipe.get().getRequiredDuration();
                 cookingTime = 0;
             } else {
                 cookingTime++;
                 if (cookingTime >= requiredDuration) {
                     cookingTime = 0;
-                    craft(recipe.value());
+                    craft(recipe.get());
                 }
             }
             world.setBlock(pos, state.setValue(TeaKettleBlock.COOKING, true).setValue(TeaKettleBlock.LIT, this.isBeingBurned), Block.UPDATE_ALL);
@@ -374,5 +376,27 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
     @Override
     public boolean canTakeItemThroughFace(int index, ItemStack stack, Direction direction) {
         return index == OUTPUT_SLOT || index == WATER_SLOT;
+    }
+
+    private TeaKettleRecipe getRecipe(List<RecipeHolder<TeaKettleRecipe>> recipes, NonNullList<ItemStack> inventory) {
+        recipeLoop:
+        for (RecipeHolder<TeaKettleRecipe> recipeHolder : recipes) {
+            TeaKettleRecipe recipe = recipeHolder.value();
+            for (Ingredient ingredient : recipe.getIngredients()) {
+                boolean ingredientFound = false;
+                for (int slotIndex = 1; slotIndex < inventory.size(); slotIndex++) {
+                    ItemStack slotItem = inventory.get(slotIndex);
+                    if (ingredient.test(slotItem)) {
+                        ingredientFound = true;
+                        break;
+                    }
+                }
+                if (!ingredientFound) {
+                    continue recipeLoop;
+                }
+            }
+            return recipe;
+        }
+        return null;
     }
 }
