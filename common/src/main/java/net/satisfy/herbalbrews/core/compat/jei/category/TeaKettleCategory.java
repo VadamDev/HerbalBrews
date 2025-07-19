@@ -3,9 +3,9 @@ package net.satisfy.herbalbrews.core.compat.jei.category;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.registry.TagsRegistry;
@@ -98,9 +98,7 @@ public class TeaKettleCategory implements IRecipeCategory<TeaKettleRecipe> {
                 .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
 
         ItemStack waterBottle = new ItemStack(Items.POTION);
-        PotionContents potionContents = waterBottle.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        potionContents.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("water")))));
-        waterBottle.set(DataComponents.POTION_CONTENTS, potionContents);
+        waterBottle.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.WATER.value())));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 118 - X_OFFSET, 43 - Y_OFFSET)
                 .addIngredients(Ingredient.of(

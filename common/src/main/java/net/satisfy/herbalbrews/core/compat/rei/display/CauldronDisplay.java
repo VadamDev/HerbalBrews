@@ -6,11 +6,11 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.satisfy.herbalbrews.HerbalBrews;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
@@ -29,9 +29,9 @@ public class CauldronDisplay extends BasicDisplay {
 
     private static List<EntryIngredient> createInputs() {
         List<EntryIngredient> inputs = new ArrayList<>();
-        inputs.add(EntryIngredients.of(createPotionStack(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("swiftness")))))));
-        inputs.add(EntryIngredients.of(createPotionStack(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("healing")))))));
-        inputs.add(EntryIngredients.of(createPotionStack(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("strength")))))));
+        inputs.add(EntryIngredients.of(createPotionStack(Potions.SWIFTNESS.value())));
+        inputs.add(EntryIngredients.of(createPotionStack(Potions.HEALING.value())));
+        inputs.add(EntryIngredients.of(createPotionStack(Potions.STRENGTH.value())));
         inputs.add(EntryIngredients.of(new ItemStack(ObjectRegistry.HERBAL_INFUSION.get())));
 
         return inputs;
@@ -44,11 +44,9 @@ public class CauldronDisplay extends BasicDisplay {
         return outputs;
     }
 
-    private static ItemStack createPotionStack(MobEffectInstance potionType) {
+    private static ItemStack createPotionStack(Potion potionType) {
         ItemStack potion = new ItemStack(Items.POTION);
-        PotionContents potionContents = potion.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        potionContents.withEffectAdded(potionType);
-        potion.set(DataComponents.POTION_CONTENTS, potionContents);
+        potion.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(potionType)));
         return potion;
     }
 

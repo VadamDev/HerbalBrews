@@ -12,8 +12,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.ShulkerBoxBlockEntity;
-import net.minecraft.world.level.block.entity.SkullBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -25,6 +23,8 @@ import net.satisfy.herbalbrews.core.blocks.entity.DrinkBlockEntity;
 import net.satisfy.herbalbrews.core.registry.EntityTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 @SuppressWarnings("deprecation")
 public class TeaCupBlock extends Block implements EntityBlock {
@@ -43,7 +43,7 @@ public class TeaCupBlock extends Block implements EntityBlock {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
                 assert stack.get(DataComponents.BLOCK_ENTITY_DATA) != null;
-                CompoundTag tag = stack.get(DataComponents.BLOCK_ENTITY_DATA).copyTag();
+                CompoundTag tag = Objects.requireNonNull(stack.get(DataComponents.BLOCK_ENTITY_DATA)).copyTag();
                 drinkBlockEntity.setStoredNbt(tag);
                 blockEntity.setChanged();
             }
@@ -78,7 +78,7 @@ public class TeaCupBlock extends Block implements EntityBlock {
             if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
                 ItemStack stack = new ItemStack(this);
                 if (drinkBlockEntity.getStoredNbt() != null && !drinkBlockEntity.getStoredNbt().isEmpty()) {
-                    stack.get(DataComponents.BLOCK_ENTITY_DATA).update(compoundTag -> drinkBlockEntity.getStoredNbt().copy());
+                    Objects.requireNonNull(stack.get(DataComponents.BLOCK_ENTITY_DATA)).update(compoundTag -> drinkBlockEntity.getStoredNbt().copy());
                 }
                 popResource(world, pos, stack);
             }

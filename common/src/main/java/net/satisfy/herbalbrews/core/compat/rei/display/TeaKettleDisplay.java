@@ -4,8 +4,6 @@ import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.satisfy.herbalbrews.core.compat.rei.category.TeaKettleCategory;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
 

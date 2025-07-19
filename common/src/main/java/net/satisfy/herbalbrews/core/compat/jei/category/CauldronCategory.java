@@ -11,11 +11,10 @@ import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.alchemy.PotionContents;
+import net.minecraft.world.item.alchemy.Potions;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
@@ -65,19 +64,13 @@ public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, CauldronRecipe recipe, IFocusGroup focuses) {
         ItemStack potion1 = new ItemStack(Items.POTION);
-        PotionContents potionContents1 = potion1.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        potionContents1.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("swiftness")))));
-        potion1.set(DataComponents.POTION_CONTENTS, potionContents1);
+        potion1.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.SWIFTNESS.value())));
 
         ItemStack potion2 = new ItemStack(Items.POTION);
-        PotionContents potionContents2 = potion1.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        potionContents2.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("healing")))));
-        potion2.set(DataComponents.POTION_CONTENTS, potionContents2);
+        potion2.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.HEALING.value())));
 
         ItemStack potion3 = new ItemStack(Items.POTION);
-        PotionContents potionContents3 = potion1.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        potionContents3.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("strength")))));
-        potion2.set(DataComponents.POTION_CONTENTS, potionContents3);
+        potion2.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.STRENGTH.value())));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 79 - X_OFFSET, 22 - Y_OFFSET)
                 .addItemStack(potion1);
@@ -87,9 +80,7 @@ public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
                 .addItemStack(potion3);
 
         ItemStack outputFlask = new ItemStack(ObjectRegistry.FLASK.get());
-        PotionContents outputContents = outputFlask.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-        outputContents.withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT.wrapAsHolder(BuiltInRegistries.MOB_EFFECT.get(ResourceLocation.withDefaultNamespace("regeneration")))));
-        outputFlask.set(DataComponents.POTION_CONTENTS, outputContents);
+        outputFlask.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.REGENERATION.value())));
         builder.addSlot(RecipeIngredientRole.OUTPUT, 79 - X_OFFSET, 58 - Y_OFFSET)
                 .addItemStack(outputFlask);
 

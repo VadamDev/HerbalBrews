@@ -16,9 +16,9 @@ import net.satisfy.herbalbrews.core.compat.jei.category.CauldronCategory;
 import net.satisfy.herbalbrews.core.compat.jei.category.TeaKettleCategory;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
+import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
-import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsIdentifier;
 import org.jetbrains.annotations.NotNull;
 
