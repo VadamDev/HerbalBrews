@@ -1,11 +1,14 @@
 package net.satisfy.herbalbrews.core.blocks;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -39,12 +42,11 @@ public class TeaCupBlock extends Block implements EntityBlock {
     @Override
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
-        if (stack.has(DataComponents.BLOCK_ENTITY_DATA)) {
+        if (stack.has(DataComponents.POTION_CONTENTS)) {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
-                assert stack.get(DataComponents.BLOCK_ENTITY_DATA) != null;
-                CompoundTag tag = Objects.requireNonNull(stack.get(DataComponents.BLOCK_ENTITY_DATA)).copyTag();
-                drinkBlockEntity.setStoredNbt(tag);
+                PotionContents data = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
+                drinkBlockEntity.setComponents(DataComponentMap.builder().set(DataComponents.POTION_CONTENTS, data).build());
                 blockEntity.setChanged();
             }
         }
@@ -77,12 +79,14 @@ public class TeaCupBlock extends Block implements EntityBlock {
             BlockEntity blockEntity = world.getBlockEntity(pos);
             if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
                 ItemStack stack = new ItemStack(this);
-                if (drinkBlockEntity.getStoredNbt() != null && !drinkBlockEntity.getStoredNbt().isEmpty()) {
-                    Objects.requireNonNull(stack.get(DataComponents.BLOCK_ENTITY_DATA)).update(compoundTag -> drinkBlockEntity.getStoredNbt().copy());
+                if (drinkBlockEntity.components() != null && !drinkBlockEntity.components().isEmpty()) {
+                    stack.set(DataComponents.POTION_CONTENTS, drinkBlockEntity.components().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY));
                 }
                 popResource(world, pos, stack);
             }
             super.onRemove(state, world, pos, newState, isMoving);
         }
     }
+
+
 }
