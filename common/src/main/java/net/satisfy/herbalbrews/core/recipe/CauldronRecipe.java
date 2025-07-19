@@ -56,6 +56,10 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
         return this.output.copy();
     }
 
+    public ItemStack assemble() {
+        return assemble(null, null);
+    }
+
     @Override
     public boolean canCraftInDimensions(int width, int height) {
         return false;

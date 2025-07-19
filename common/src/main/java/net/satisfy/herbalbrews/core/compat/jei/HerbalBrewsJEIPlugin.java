@@ -28,12 +28,14 @@ import java.util.Objects;
 
 @JeiPlugin
 public class HerbalBrewsJEIPlugin implements IModPlugin {
+
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new TeaKettleCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new CauldronCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
+    @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
         List<RecipeHolder<TeaKettleRecipe>> cookingCauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
