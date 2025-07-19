@@ -4,7 +4,6 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.particles.SimpleParticleType;
@@ -16,14 +15,13 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.item.enchantment.Enchantments;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
@@ -51,7 +49,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.function.Supplier;
 
 @SuppressWarnings("deprecation")
@@ -105,7 +102,7 @@ public class TeaKettleBlock extends BaseEntityBlock {
             player.openMenu(factory);
             return InteractionResult.SUCCESS;
         } else {
-        return super.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
+            return super.useWithoutItem(blockState, level, blockPos, player, blockHitResult);
         }
     }
 
@@ -201,7 +198,7 @@ public class TeaKettleBlock extends BaseEntityBlock {
     }
 
     @Override
-    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> list, TooltipFlag tooltipFlag) {
-        list.add(Component.translatable("tooltip.herbalbrews.canbeplaced").withStyle(style -> style.withColor(TextColor.fromRgb(0xCD7F32)).withItalic(true)));
+    public void appendHoverText(ItemStack itemStack, Item.TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag tooltipFlag) {
+        tooltip.add(Component.translatable("tooltip.herbalbrews.canbeplaced").withStyle(style -> style.withColor(TextColor.fromRgb(0xCD7F32)).withItalic(true)));
     }
 }

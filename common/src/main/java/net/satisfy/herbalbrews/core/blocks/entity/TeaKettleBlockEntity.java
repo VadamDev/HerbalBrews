@@ -22,7 +22,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
@@ -108,27 +107,27 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
     }
 
     @Override
-    protected void loadAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.loadAdditional(compoundTag, provider);
-        ContainerHelper.loadAllItems(compoundTag, this.inventory, provider);
-        this.cookingTime = compoundTag.getInt("CookingTime");
-        this.isBeingBurned = compoundTag.getBoolean("IsBeingBurned");
-        this.waterLevel = compoundTag.getInt("WaterLevel");
-        this.heatLevel = compoundTag.getInt("HeatLevel");
-        this.experience = compoundTag.getFloat("Experience");
-        this.requiredDuration = compoundTag.getInt("RequiredDuration");
+    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+        super.loadAdditional(nbt, provider);
+        ContainerHelper.loadAllItems(nbt, this.inventory, provider);
+        this.cookingTime = nbt.getInt("CookingTime");
+        this.isBeingBurned = nbt.getBoolean("IsBeingBurned");
+        this.waterLevel = nbt.getInt("WaterLevel");
+        this.heatLevel = nbt.getInt("HeatLevel");
+        this.experience = nbt.getFloat("Experience");
+        this.requiredDuration = nbt.getInt("RequiredDuration");
     }
 
     @Override
-    protected void saveAdditional(CompoundTag compoundTag, HolderLookup.Provider provider) {
-        super.saveAdditional(compoundTag, provider);
-        ContainerHelper.saveAllItems(compoundTag, this.inventory, provider);
-        compoundTag.putInt("CookingTime", this.cookingTime);
-        compoundTag.putBoolean("IsBeingBurned", this.isBeingBurned);
-        compoundTag.putInt("WaterLevel", this.waterLevel);
-        compoundTag.putInt("HeatLevel", this.heatLevel);
-        compoundTag.putFloat("Experience", this.experience);
-        compoundTag.putInt("RequiredDuration", this.requiredDuration);
+    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider provider) {
+        super.saveAdditional(nbt, provider);
+        ContainerHelper.saveAllItems(nbt, this.inventory, provider);
+        nbt.putInt("CookingTime", this.cookingTime);
+        nbt.putBoolean("IsBeingBurned", this.isBeingBurned);
+        nbt.putInt("WaterLevel", this.waterLevel);
+        nbt.putInt("HeatLevel", this.heatLevel);
+        nbt.putFloat("Experience", this.experience);
+        nbt.putInt("RequiredDuration", this.requiredDuration);
     }
 
     @SuppressWarnings("deprecation")
@@ -217,7 +216,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
     @Override
     public CompoundTag getUpdateTag(HolderLookup.Provider provider) {
-        CompoundTag tag =  super.getUpdateTag(provider);
+        CompoundTag tag = super.getUpdateTag(provider);
         tag.putBoolean("DoEffect", this.doEffect);
         return tag;
     }
@@ -258,23 +257,12 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             }
         }
 
-        RecipeInput recipeInput = new RecipeInput() {
-            @Override
-            public ItemStack getItem(int i) {
-                return TeaKettleBlockEntity.this.getItem(i);
-            }
-
-            @Override
-            public int size() {
-                return TeaKettleBlockEntity.this.getItems().size();
-            }
-        };
         RecipeManager recipeManager = world.getRecipeManager();
         List<RecipeHolder<TeaKettleRecipe>> recipes = recipeManager.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
         Optional<TeaKettleRecipe> recipe = Optional.ofNullable(getRecipe(recipes, inventory));
         boolean canCraft = recipe.isPresent() && canCraft(recipe.get());
 
-        if (canCraft && recipe.isPresent()) {
+        if (canCraft) {
             if (requiredDuration <= 0) {
                 requiredDuration = recipe.get().getRequiredDuration();
                 cookingTime = 0;
