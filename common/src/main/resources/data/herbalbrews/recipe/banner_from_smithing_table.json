@@ -7,7 +7,7 @@
     "item": "herbalbrews:herbalbrews_banner"
   },
   "result": {
-    "item": "herbalbrews:herbalbrews_banner",
+    "id": "herbalbrews:herbalbrews_banner",
     "count": 2
   },
   "template": {

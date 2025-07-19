@@ -13,8 +13,8 @@
     }
   ],
   "result": {
-    "item": "herbalbrews:coffee"
+    "id": "herbalbrews:coffee"
   },
-  "id": "herbalbrews:deeprush",
+  "effect": "herbalbrews:deeprush",
   "effect_duration": 1800
 }
