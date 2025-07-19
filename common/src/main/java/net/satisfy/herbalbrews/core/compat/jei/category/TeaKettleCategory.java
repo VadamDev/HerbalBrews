@@ -141,7 +141,7 @@ public class TeaKettleCategory implements IRecipeCategory<TeaKettleRecipe> {
     private Ingredient filterOutTag(Ingredient ingredient) {
         List<ItemStack> filteredStacks = new ArrayList<>();
         for (ItemStack stack : ingredient.getItems()) {
-            if (!stack.is(TagsRegistry.CONTAINER_ITEMS) || !stack.is(Items.GLASS_BOTTLE)) {
+            if (!stack.is(TagsRegistry.CONTAINER_ITEMS)) {
                 filteredStacks.add(stack);
             }
         }
@@ -151,7 +151,7 @@ public class TeaKettleCategory implements IRecipeCategory<TeaKettleRecipe> {
     private boolean containsTagIngredient(NonNullList<Ingredient> ingredients) {
         for (Ingredient ingredient : ingredients) {
             for (ItemStack stack : ingredient.getItems()) {
-                if (stack.is(TagsRegistry.CONTAINER_ITEMS) || stack.is(Items.GLASS_BOTTLE)) {
+                if (stack.is(TagsRegistry.CONTAINER_ITEMS)) {
                     return true;
                 }
             }

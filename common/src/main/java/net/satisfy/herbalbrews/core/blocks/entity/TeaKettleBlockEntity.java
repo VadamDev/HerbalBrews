@@ -204,7 +204,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
     public void consumeHeatItem() {
         ItemStack heatingItem = inventory.get(HEATING_SLOT);
-        if (!heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS) || ((!heatingItem.isEmpty() && heatingItem.is(Items.BLAZE_POWDER)))) {
+        if (!heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS)) {
             heatingItem.shrink(1);
             inventory.set(HEATING_SLOT, heatingItem);
             doEffect = true;
@@ -242,7 +242,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
         ItemStack heatingItem = getItem(HEATING_SLOT);
 
-        if (this.heatLevel < HEAT_CONSUMPTION_THRESHOLD && !heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS) || ((this.heatLevel < HEAT_CONSUMPTION_THRESHOLD && !heatingItem.isEmpty() && heatingItem.is(Items.BLAZE_POWDER)))) {
+        if (this.heatLevel < HEAT_CONSUMPTION_THRESHOLD && !heatingItem.isEmpty() && heatingItem.is(TagsRegistry.HEAT_ITEMS)) {
             this.heatLevel = Math.min(this.heatLevel + HEAT_PER_ITEM, MAX_HEAT_LEVEL);
             consumeHeatItem();
             setChanged();
@@ -282,7 +282,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
 
         if (!getItem(WATER_SLOT).isEmpty()) {
             ItemStack waterItem = getItem(WATER_SLOT);
-            if (waterItem.is(TagsRegistry.SMALL_WATER_FILL) || TagsRegistry.isWaterFill(waterItem)) {
+            if (waterItem.is(TagsRegistry.SMALL_WATER_FILL)) {
                 waterLevel = Math.min(waterLevel + 25, 100);
                 ItemStack remainderStack = getRemainderItem(waterItem);
                 waterItem.shrink(1);
@@ -349,13 +349,13 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
         if (direction == Direction.DOWN) {
             return false;
         } else {
-            if (stack.is(TagsRegistry.CONTAINER_ITEMS) || stack.is(Items.GLASS_BOTTLE)) {
+            if (stack.is(TagsRegistry.CONTAINER_ITEMS)) {
                 return index == 5;
             }
-            if (stack.is(TagsRegistry.HEAT_ITEMS) || stack.is(Items.BLAZE_POWDER)) {
+            if (stack.is(TagsRegistry.HEAT_ITEMS)) {
                 return index == 7;
             }
-            if (stack.is(TagsRegistry.SMALL_WATER_FILL) || stack.is(TagsRegistry.LARGE_WATER_FILL) || TagsRegistry.isWaterFill(stack)) {
+            if (stack.is(TagsRegistry.SMALL_WATER_FILL) || stack.is(TagsRegistry.LARGE_WATER_FILL)) {
                 return index == WATER_SLOT;
             }
             return index >= 1 && index <= 4;
