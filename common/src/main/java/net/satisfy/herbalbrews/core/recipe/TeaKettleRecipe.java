@@ -16,7 +16,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.effect.MobEffect;
-import net.satisfy.herbalbrews.core.blocks.entity.TeaKettleBlockEntity;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
@@ -42,23 +41,9 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
         this.experience = experience;
     }
 
-    private boolean waterLevelSufficient(Container inventory) {
-        if (inventory instanceof TeaKettleBlockEntity teaKettle) {
-            return teaKettle.getWaterLevel() >= requiredWater;
-        }
-        return false;
-    }
-
-    private boolean heatLevelSufficient(Container inventory) {
-        if (inventory instanceof TeaKettleBlockEntity teaKettle) {
-            return teaKettle.getHeatLevel() >= requiredHeat;
-        }
-        return false;
-    }
-
     @Override
     public boolean matches(RecipeInput recipeInput, Level level) {
-        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5) /*&& waterLevelSufficient(recipeInput) && heatLevelSufficient(recipeInput) TODO fixme*/;
+        return HerbalBrewsUtil.matchesRecipe(recipeInput, inputs, 0, 5);
     }
 
     @Override
@@ -189,11 +174,12 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
 
             if (recipe.effect != null) {
                 registryFriendlyByteBuf.writeBoolean(true);
-                registryFriendlyByteBuf.writeResourceLocation(recipe.effect.value().getDescriptionId().contains(":") ? ResourceLocation.parse(recipe.effect.value().getDescriptionId().split(":")[1]) : ResourceLocation.withDefaultNamespace("unknown"));
+                MobEffect.STREAM_CODEC.encode(registryFriendlyByteBuf, recipe.effect);
                 registryFriendlyByteBuf.writeInt(recipe.effectDuration);
             } else {
                 registryFriendlyByteBuf.writeBoolean(false);
             }
+
             registryFriendlyByteBuf.writeInt(recipe.requiredWater);
             registryFriendlyByteBuf.writeInt(recipe.requiredHeat);
             registryFriendlyByteBuf.writeInt(recipe.requiredDuration);

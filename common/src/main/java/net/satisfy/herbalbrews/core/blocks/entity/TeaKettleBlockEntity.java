@@ -10,6 +10,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.util.Mth;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.effect.MobEffectInstance;
@@ -28,6 +29,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 import net.satisfy.herbalbrews.client.gui.handler.TeaKettleGuiHandler;
 import net.satisfy.herbalbrews.core.blocks.TeaKettleBlock;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
@@ -187,6 +189,7 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             recipeOutput.set(DataComponents.POTION_CONTENTS, data);
         }
         ItemStack outputSlotStack = this.getItem(OUTPUT_SLOT);
+        popExp(recipe.getExperience());
         if (outputSlotStack.isEmpty()) setItem(OUTPUT_SLOT, recipeOutput);
         else if (outputSlotStack.is(recipeOutput.getItem())) outputSlotStack.grow(recipeOutput.getCount());
         waterLevel -= recipe.getRequiredWater();
@@ -387,5 +390,21 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
             return recipe;
         }
         return null;
+    }
+
+    private void popExp(float experience) {
+        if (this.level instanceof ServerLevel serverLevel) {
+            createExperience(serverLevel, new Vec3(getBlockPos().getX(), getBlockPos().getY(), getBlockPos().getZ()), 1, experience);
+        }
+    }
+
+    private void createExperience(ServerLevel arg, Vec3 arg2, int j, float g) {
+        int i = Mth.floor((float)j * g);
+        float f = Mth.frac((float)j * g);
+        if (f != 0.0F && Math.random() < (double)f) {
+            ++i;
+        }
+
+        ExperienceOrb.award(arg, arg2, i);
     }
 }
