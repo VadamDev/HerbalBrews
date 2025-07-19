@@ -4,17 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.effect.MobEffect;
 import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 import net.satisfy.herbalbrews.core.util.HerbalBrewsUtil;
 import org.jetbrains.annotations.NotNull;
@@ -22,14 +19,14 @@ import org.jetbrains.annotations.NotNull;
 public class TeaKettleRecipe implements Recipe<RecipeInput> {
     private final NonNullList<Ingredient> inputs;
     private final ItemStack output;
-    private final Holder<MobEffect> effect;
+    private final ResourceLocation effect;
     private final int effectDuration;
     private final int requiredWater;
     private final int requiredHeat;
     private final int requiredDuration;
     private final float experience;
 
-    public TeaKettleRecipe(NonNullList<Ingredient> inputs, ItemStack output, Holder<MobEffect> effect, int effectDuration, int requiredWater, int requiredHeat, int requiredDuration, float experience) {
+    public TeaKettleRecipe(NonNullList<Ingredient> inputs, ItemStack output, ResourceLocation effect, int effectDuration, int requiredWater, int requiredHeat, int requiredDuration, float experience) {
         this.inputs = inputs;
         this.output = output;
         this.effect = effect;
@@ -68,7 +65,7 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
         return getResultItem(null);
     }
 
-    public Holder<MobEffect> getEffect() {
+    public ResourceLocation getEffect() {
         return this.effect;
     }
 
@@ -132,7 +129,8 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
                                 }) : DataResult.success(NonNullList.of(Ingredient.EMPTY, ingredients));
                             }
                         }, DataResult::success).forGetter(TeaKettleRecipe::getIngredients),
-                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(teaKettleRecipe -> teaKettleRecipe.output), MobEffect.CODEC.fieldOf("effect").forGetter(TeaKettleRecipe::getEffect),
+                        ItemStack.STRICT_CODEC.fieldOf("result").forGetter(teaKettleRecipe -> teaKettleRecipe.output),
+                        ResourceLocation.CODEC.fieldOf("effect").forGetter(TeaKettleRecipe::getEffect),
                         Codec.INT.fieldOf("effect_duration").forGetter(TeaKettleRecipe::getEffectDuration),
                         Codec.INT.fieldOf("fluid_amount").forGetter(TeaKettleRecipe::getRequiredWater),
                         Codec.INT.fieldOf("heat_amount").forGetter(TeaKettleRecipe::getRequiredHeat),
@@ -147,19 +145,18 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
             nonNullList.replaceAll((ingredient) -> Ingredient.CONTENTS_STREAM_CODEC.decode(registryFriendlyByteBuf));
             ItemStack itemStack = ItemStack.STREAM_CODEC.decode(registryFriendlyByteBuf);
 
-            MobEffect effect = null;
+            ResourceLocation effect = null;
             int effectDuration = 0;
             boolean hasEffect = registryFriendlyByteBuf.readBoolean();
             if (hasEffect) {
-                ResourceLocation effectId = registryFriendlyByteBuf.readResourceLocation();
-                effect = BuiltInRegistries.MOB_EFFECT.get(effectId);
+                effect = registryFriendlyByteBuf.readResourceLocation();
                 effectDuration = registryFriendlyByteBuf.readInt();
             }
             int requiredWater = registryFriendlyByteBuf.readInt();
             int requiredHeat = registryFriendlyByteBuf.readInt();
             int requiredDuration = registryFriendlyByteBuf.readInt();
             float experience = registryFriendlyByteBuf.readFloat();
-            return new TeaKettleRecipe(nonNullList, itemStack, BuiltInRegistries.MOB_EFFECT.wrapAsHolder(effect), effectDuration, requiredWater, requiredHeat, requiredDuration, experience);
+            return new TeaKettleRecipe(nonNullList, itemStack, effect, effectDuration, requiredWater, requiredHeat, requiredDuration, experience);
         }
 
         public static void toNetwork(RegistryFriendlyByteBuf registryFriendlyByteBuf, TeaKettleRecipe recipe) {
@@ -173,7 +170,7 @@ public class TeaKettleRecipe implements Recipe<RecipeInput> {
 
             if (recipe.effect != null) {
                 registryFriendlyByteBuf.writeBoolean(true);
-                registryFriendlyByteBuf.writeResourceLocation(recipe.effect.value().getDescriptionId().contains(":") ? ResourceLocation.parse(recipe.effect.value().getDescriptionId().split(":")[1]) : ResourceLocation.withDefaultNamespace("unknown"));
+                registryFriendlyByteBuf.writeResourceLocation(recipe.effect.toString().contains(":") ? ResourceLocation.parse(recipe.effect.toString().split(":")[1]) : ResourceLocation.withDefaultNamespace("unknown"));
                 registryFriendlyByteBuf.writeInt(recipe.effectDuration);
             } else {
                 registryFriendlyByteBuf.writeBoolean(false);

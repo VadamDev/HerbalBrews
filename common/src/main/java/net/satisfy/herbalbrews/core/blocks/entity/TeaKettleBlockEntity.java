@@ -21,6 +21,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.alchemy.Potion;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -184,9 +185,11 @@ public class TeaKettleBlockEntity extends BlockEntity implements ImplementedInve
         }
         ItemStack recipeOutput = recipe.assemble();
         if (recipe.getEffect() != null && recipe.getEffectDuration() > 0) {
-            PotionContents data = recipeOutput.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-            data.withEffectAdded(new MobEffectInstance(recipe.getEffect(), recipe.getEffectDuration()));
-            recipeOutput.set(DataComponents.POTION_CONTENTS, data);
+            PotionContents potionContents = recipeOutput.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY)
+                    .withEffectAdded(new MobEffectInstance(BuiltInRegistries.MOB_EFFECT
+                            .wrapAsHolder(BuiltInRegistries.MOB_EFFECT
+                                    .get(recipe.getEffect())), recipe.getEffectDuration()));
+            recipeOutput.set(DataComponents.POTION_CONTENTS, potionContents);
         }
         ItemStack outputSlotStack = this.getItem(OUTPUT_SLOT);
         popExp(recipe.getExperience());
