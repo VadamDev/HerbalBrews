@@ -28,29 +28,27 @@ import java.util.Objects;
 
 @JeiPlugin
 public class HerbalBrewsJEIPlugin implements IModPlugin {
-
     @Override
     public void registerCategories(IRecipeCategoryRegistration registration) {
         registration.addRecipeCategories(new TeaKettleCategory(registration.getJeiHelpers().getGuiHelper()));
         registration.addRecipeCategories(new CauldronCategory(registration.getJeiHelpers().getGuiHelper()));
     }
 
-    @Override
     public void registerRecipes(IRecipeRegistration registration) {
         RecipeManager rm = Objects.requireNonNull(Minecraft.getInstance().level).getRecipeManager();
-        List<RecipeHolder<TeaKettleRecipe>> cookingCauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
+        List<RecipeHolder<TeaKettleRecipe>> teaKettleRecipeHolders = rm.getAllRecipesFor(RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get());
         List<TeaKettleRecipe> teaKettleRecipes = new ArrayList<>();
-        cookingCauldronRecipes.iterator().forEachRemaining(recipeHolder -> {
+        teaKettleRecipeHolders.iterator().forEachRemaining(recipeHolder -> {
             teaKettleRecipes.add(recipeHolder.value());
         });
         registration.addRecipes(TeaKettleCategory.TEA_KETTLE_TYPE, teaKettleRecipes);
 
-        List<RecipeHolder<CauldronRecipe>> cauldronRecipes = rm.getAllRecipesFor(RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.get());
-        List<CauldronRecipe> cauldronRecipeList = new ArrayList<>();
-        cauldronRecipes.iterator().forEachRemaining(recipeHolder -> {
-            cauldronRecipeList.add(recipeHolder.value());
+        List<RecipeHolder<CauldronRecipe>> cauldronRecipeHolders = rm.getAllRecipesFor(RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.get());
+        List<CauldronRecipe> cauldronRecipes = new ArrayList<>();
+        cauldronRecipeHolders.iterator().forEachRemaining(recipeHolder -> {
+            cauldronRecipes.add(recipeHolder.value());
         });
-        registration.addRecipes(CauldronCategory.CAULDRON_TYPE, cauldronRecipeList);
+        registration.addRecipes(CauldronCategory.CAULDRON_TYPE, cauldronRecipes);
     }
 
 

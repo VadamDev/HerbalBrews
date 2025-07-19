@@ -70,7 +70,7 @@ public class CauldronCategory implements IRecipeCategory<CauldronRecipe> {
         potion2.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.HEALING.value())));
 
         ItemStack potion3 = new ItemStack(Items.POTION);
-        potion2.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.STRENGTH.value())));
+        potion3.set(DataComponents.POTION_CONTENTS, new PotionContents(BuiltInRegistries.POTION.wrapAsHolder(Potions.STRENGTH.value())));
 
         builder.addSlot(RecipeIngredientRole.INPUT, 79 - X_OFFSET, 22 - Y_OFFSET)
                 .addItemStack(potion1);
