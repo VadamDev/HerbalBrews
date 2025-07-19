@@ -10,7 +10,6 @@ import net.minecraft.world.inventory.FurnaceResultSlot;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.satisfy.herbalbrews.core.registry.MenuTypeRegistry;
 import net.satisfy.herbalbrews.core.registry.TagsRegistry;
 import org.jetbrains.annotations.NotNull;
