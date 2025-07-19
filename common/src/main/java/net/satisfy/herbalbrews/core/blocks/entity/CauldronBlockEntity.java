@@ -160,7 +160,7 @@ public class CauldronBlockEntity extends BlockEntity implements ImplementedInven
         outputPotion.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(randomTexture));
 
         for (MobEffectInstance effectInstance : uniqueEffectsMap.values()) {
-            potionContents.customEffects().add(effectInstance);
+            potionContents = potionContents.withEffectAdded(effectInstance);
         }
 
         outputPotion.set(DataComponents.POTION_CONTENTS, potionContents);
