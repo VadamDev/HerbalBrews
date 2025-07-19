@@ -8,6 +8,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.StackedContents;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -36,12 +37,23 @@ public class CauldronRecipe implements Recipe<RecipeInput> {
 
     @Override
     public boolean matches(RecipeInput recipeInput, Level level) {
-        return false;
+        StackedContents recipeMatcher = new StackedContents();
+        int matchingStacks = 0;
+
+        for(int i = 1; i < 5; ++i) {
+            ItemStack itemStack = recipeInput.getItem(i);
+            if (!itemStack.isEmpty()) {
+                ++matchingStacks;
+                recipeMatcher.accountStack(itemStack, 1);
+            }
+        }
+
+        return matchingStacks == this.inputs.size() && recipeMatcher.canCraft(this, null);
     }
 
     @Override
     public ItemStack assemble(RecipeInput recipeInput, HolderLookup.Provider provider) {
-        return ItemStack.EMPTY;
+        return this.output.copy();
     }
 
     @Override
