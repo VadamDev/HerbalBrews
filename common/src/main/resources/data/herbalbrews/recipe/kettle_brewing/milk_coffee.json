@@ -13,7 +13,7 @@
     }
   ],
   "result": {
-    "item": "herbalbrews:milk_coffee"
+    "id": "herbalbrews:milk_coffee"
   },
   "effect": "herbalbrews:deeprush",
   "effect_duration": 2600

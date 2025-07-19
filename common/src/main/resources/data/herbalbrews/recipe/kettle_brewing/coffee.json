@@ -1,20 +1,20 @@
 {
   "type": "herbalbrews:kettle_brewing",
   "experience": 0.8,
-  "crafting_duration": 25,
-  "fluid_amount": 10,
-  "heat_amount": 40,
+  "crafting_duration": 20,
+  "fluid_amount": 20,
+  "heat_amount": 50,
   "ingredients": [
     {
-      "item": "herbalbrews:dried_green_tea"
+      "item": "herbalbrews:coffee_beans"
     },
     {
       "item": "minecraft:glass_bottle"
     }
   ],
   "result": {
-    "item": "herbalbrews:green_tea"
+    "item": "herbalbrews:coffee"
   },
-  "effect": "herbalbrews:balanced",
+  "id": "herbalbrews:deeprush",
   "effect_duration": 1800
 }

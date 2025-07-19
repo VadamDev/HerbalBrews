@@ -3,19 +3,18 @@
   "experience": 0.8,
   "crafting_duration": 35,
   "fluid_amount": 20,
-  "heat_amount": 25,
+  "heat_amount": 40,
   "ingredients": [
     {
-      "item": "herbalbrews:rooibos_leaf"
+      "item": "herbalbrews:dried_oolong_tea"
     },
     {
       "item": "minecraft:glass_bottle"
     }
   ],
   "result": {
-    "item": "herbalbrews:rooibos_tea"
+    "id": "herbalbrews:oolong_tea"
   },
-  "effect": "minecraft:regeneration",
-  "effect_duration": 200
+  "effect": "herbalbrews:fortune",
+  "effect_duration": 1800
 }
-

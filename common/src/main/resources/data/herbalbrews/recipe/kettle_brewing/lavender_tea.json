@@ -1,11 +1,12 @@
 {
   "type": "herbalbrews:kettle_brewing",
   "experience": 0.8,
-  "fluid_amount": 10,
-  "heat_amount": 50,
+  "crafting_duration": 60,
+  "fluid_amount": 20,
+  "heat_amount": 0,
   "ingredients": [
     {
-      "item": "herbalbrews:dried_black_tea"
+      "item": "herbalbrews:lavender_blossom"
     },
     {
       "item": "minecraft:sugar"
@@ -15,9 +16,8 @@
     }
   ],
   "result": {
-    "item": "herbalbrews:black_tea"
+    "id": "herbalbrews:lavender_tea"
   },
-  "effect": "herbalbrews:tough",
-  "effect_duration": 1800,
-  "crafting_duration": 20
+  "effect": "herbalbrews:feral",
+  "effect_duration": 1800
 }

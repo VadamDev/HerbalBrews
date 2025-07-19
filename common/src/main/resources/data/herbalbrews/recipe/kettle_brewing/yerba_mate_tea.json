@@ -1,12 +1,12 @@
 {
   "type": "herbalbrews:kettle_brewing",
-  "experience": 0.5,
-  "crafting_duration": 50,
-  "fluid_amount": 15,
-  "heat_amount": 0,
+  "experience": 0.8,
+  "crafting_duration": 35,
+  "fluid_amount": 20,
+  "heat_amount": 75,
   "ingredients": [
     {
-      "item": "herbalbrews:hibiscus"
+      "item": "herbalbrews:yerba_mate_leaf"
     },
     {
       "item": "minecraft:sugar"
@@ -16,8 +16,9 @@
     }
   ],
   "result": {
-    "item": "herbalbrews:hibiscus_tea"
+    "id": "herbalbrews:yerba_mate_tea"
   },
-  "effect": "herbalbrews:lifeleech",
+  "effect": "herbalbrews:bonding",
   "effect_duration": 1800
 }
+

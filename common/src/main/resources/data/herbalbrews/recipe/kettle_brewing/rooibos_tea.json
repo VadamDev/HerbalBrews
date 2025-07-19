@@ -3,22 +3,19 @@
   "experience": 0.8,
   "crafting_duration": 35,
   "fluid_amount": 20,
-  "heat_amount": 75,
+  "heat_amount": 25,
   "ingredients": [
     {
-      "item": "herbalbrews:yerba_mate_leaf"
-    },
-    {
-      "item": "minecraft:sugar"
+      "item": "herbalbrews:rooibos_leaf"
     },
     {
       "item": "minecraft:glass_bottle"
     }
   ],
   "result": {
-    "item": "herbalbrews:yerba_mate_tea"
+    "id": "herbalbrews:rooibos_tea"
   },
-  "effect": "herbalbrews:bonding",
-  "effect_duration": 1800
+  "effect": "minecraft:regeneration",
+  "effect_duration": 200
 }
 
