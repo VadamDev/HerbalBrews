@@ -2,7 +2,8 @@
   "parent": "herbalbrews:main/let_it_dry",
   "display": {
     "icon": {
-      "item": "herbalbrews:black_tea_leaf_block"
+      "id": "herbalbrews:black_tea_leaf_block",
+      "count": 1
     },
     "title": {
       "translate": "herbalbrews.advancement.dry_2"

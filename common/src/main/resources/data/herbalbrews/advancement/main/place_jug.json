@@ -21,7 +21,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:jug"
+      "id": "herbalbrews:jug",
+      "count": 1
     },
     "show_toast": true,
     "title": {

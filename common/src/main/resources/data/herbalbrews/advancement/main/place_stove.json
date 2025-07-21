@@ -21,7 +21,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:stove"
+      "id": "herbalbrews:stove",
+      "count": 1
     },
     "show_toast": true,
     "title": {

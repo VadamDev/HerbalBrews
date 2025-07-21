@@ -20,7 +20,8 @@
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:coffee"
+      "id": "herbalbrews:coffee",
+      "count": 1
     },
     "show_toast": true,
     "title": {

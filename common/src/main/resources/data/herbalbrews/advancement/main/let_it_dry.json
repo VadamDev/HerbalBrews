@@ -21,7 +21,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:green_tea_leaf_block"
+      "id": "herbalbrews:green_tea_leaf_block",
+      "count": 1
     },
     "show_toast": true,
     "title": {

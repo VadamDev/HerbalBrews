@@ -32,7 +32,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:copper_tea_kettle"
+      "id": "herbalbrews:copper_tea_kettle",
+      "count": 1
     },
     "show_toast": true,
     "title": {

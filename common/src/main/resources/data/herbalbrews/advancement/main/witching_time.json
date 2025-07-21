@@ -2,7 +2,8 @@
   "parent": "herbalbrews:main/place_cauldron",
   "display": {
     "icon": {
-      "item": "herbalbrews:witch_hat"
+      "id": "herbalbrews:witch_hat",
+      "count": 1
     },
     "title": {
       "translate": "herbalbrews.advancement.witching_time"

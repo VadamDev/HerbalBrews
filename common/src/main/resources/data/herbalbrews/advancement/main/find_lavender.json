@@ -2,7 +2,8 @@
   "parent": "herbalbrews:main/find_tea_blossom",
   "display": {
     "icon": {
-      "item": "herbalbrews:lavender"
+      "id": "herbalbrews:lavender",
+      "count": 1
     },
     "title": {
       "translate": "herbalbrews.advancement.find_lavender"

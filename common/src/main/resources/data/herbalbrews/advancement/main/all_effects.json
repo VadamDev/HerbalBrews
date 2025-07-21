@@ -24,7 +24,8 @@
     "frame": "challenge",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:flask",
+      "id": "herbalbrews:flask",
+      "count": 1,
       "nbt": "{CustomModelData: 2}"
   },
     "show_toast": true,

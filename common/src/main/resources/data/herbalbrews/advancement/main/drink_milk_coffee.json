@@ -20,7 +20,8 @@
     "frame": "goal",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:milk_coffee"
+      "id": "herbalbrews:milk_coffee",
+      "count": 1
     },
     "show_toast": true,
     "title": {

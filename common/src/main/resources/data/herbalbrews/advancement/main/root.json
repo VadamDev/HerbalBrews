@@ -1,7 +1,8 @@
 {
   "display": {
     "icon": {
-      "item": "herbalbrews:hibiscus_tea"
+      "id": "herbalbrews:hibiscus_tea",
+      "count": 1
     },
     "title": {
       "translate": "herbalbrews.advancement.root"

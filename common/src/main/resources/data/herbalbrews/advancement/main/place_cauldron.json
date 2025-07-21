@@ -21,7 +21,8 @@
     "frame": "task",
     "hidden": false,
     "icon": {
-      "item": "herbalbrews:cauldron"
+      "id": "herbalbrews:cauldron",
+      "count": 1
     },
     "show_toast": true,
     "title": {

@@ -2,7 +2,8 @@
   "parent": "herbalbrews:main/root",
   "display": {
     "icon": {
-      "item": "herbalbrews:tea_blossom"
+      "id": "herbalbrews:tea_blossom",
+      "count": 1
     },
     "title": {
       "translate": "herbalbrews.advancement.find_tea_blossom"

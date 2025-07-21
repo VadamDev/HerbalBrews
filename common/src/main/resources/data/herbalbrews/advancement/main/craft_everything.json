@@ -2,7 +2,8 @@
   "parent": "herbalbrews:main/place_tea_kettle",
   "display": {
     "icon": {
-      "item": "herbalbrews:herbalbrews_banner"
+      "count": 1,
+      "id": "herbalbrews:herbalbrews_banner"
     },
     "title": {
       "translate": "herbalbrews.advancement.craft_everything"
