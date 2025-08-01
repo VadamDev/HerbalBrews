@@ -17,7 +17,7 @@
       "item": "herbalbrews:coffee"
     },
     {
-      "item": "minecraft:milk_bucket"
+      "tag": "herbalbrews:is_milk"
     }
   ],
   "result": {
