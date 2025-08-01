@@ -34,7 +34,6 @@ public class CommonEvents {
         PlayerEvent.ATTACK_ENTITY.register(CommonEvents::attack);
         EntityEvent.LIVING_HURT.register(CommonEvents::onLivingHurt);
         BlockEvent.BREAK.register(CommonEvents::onBlockBreak);
-        InteractionEvent.RIGHT_CLICK_BLOCK.register();
     }
 
     public static EventResult attack(Player player, Level level, Entity target, InteractionHand hand, @Nullable EntityHitResult result) {
