@@ -67,19 +67,4 @@ public class TeaCupBlock extends Block implements EntityBlock {
     public @Nullable BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return EntityTypeRegistry.DRINK_BLOCK_ENTITY.get().create(pos, state);
     }
-
-    @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
-                ItemStack stack = new ItemStack(this);
-                if (drinkBlockEntity.getStoredNbt() != null && !drinkBlockEntity.getStoredNbt().isEmpty()) {
-                    stack.setTag(drinkBlockEntity.getStoredNbt().copy());
-                }
-                popResource(world, pos, stack);
-            }
-            super.onRemove(state, world, pos, newState, isMoving);
-        }
-    }
 }
