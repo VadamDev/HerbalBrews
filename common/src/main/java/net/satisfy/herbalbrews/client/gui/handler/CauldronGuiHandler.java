@@ -1,5 +1,7 @@
 package net.satisfy.herbalbrews.client.gui.handler;
 
+import net.minecraft.advancements.CriteriaTriggers;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
@@ -9,7 +11,10 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.PotionItem;
+import net.minecraft.world.item.alchemy.Potion;
+import net.minecraft.world.item.alchemy.PotionUtils;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
 import net.satisfy.herbalbrews.core.registry.ScreenHandlerTypeRegistry;
 import org.jetbrains.annotations.NotNull;
@@ -27,36 +32,16 @@ public class CauldronGuiHandler extends AbstractContainerMenu {
         this.container = container;
         this.data = data;
         addDataSlots(this.data);
-        addSlot(new Slot(container, 0, 57, 16) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof PotionItem;
-            }
-        });
-        addSlot(new Slot(container, 1, 79, 22) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof PotionItem;
-            }
-        });
-        addSlot(new Slot(container, 2, 101, 16) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() instanceof PotionItem;
-            }
-        });
+        addSlot(new PotionSlot(container, 0, 57, 16));
+        addSlot(new PotionSlot(container, 1, 79, 22));
+        addSlot(new PotionSlot(container, 2, 101, 16));
         addSlot(new Slot(container, 3, 79, 58) {
             @Override
             public boolean mayPlace(ItemStack stack) {
                 return false;
             }
         });
-        addSlot(new Slot(container, 4, 148, 42) {
-            @Override
-            public boolean mayPlace(ItemStack stack) {
-                return stack.getItem() == ObjectRegistry.HERBAL_INFUSION.get();
-            }
-        });
+        addSlot(new FuelSlot(container, 4, 148, 42));
         for (int i = 0; i < 3; i++) {
             for (int j = 0; j < 9; j++) {
                 addSlot(new Slot(playerInventory, j + i * 9 + 9, 8 + j * 18, 84 + i * 18));
@@ -78,38 +63,53 @@ public class CauldronGuiHandler extends AbstractContainerMenu {
 
     @Override
     public @NotNull ItemStack quickMoveStack(Player player, int index) {
-        ItemStack stack = ItemStack.EMPTY;
+        ItemStack itemStack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot.hasItem()) {
-            ItemStack originalStack = slot.getItem();
-            stack = originalStack.copy();
-            if (index < 5) { 
-                if (!this.moveItemStackTo(originalStack, 5, this.slots.size(), true)) {
+        if (slot != null && slot.hasItem()) {
+            ItemStack itemStack2 = slot.getItem();
+            itemStack = itemStack2.copy();
+            if ((index < 0 || index > 2) && index != 3 && index != 4) {
+                if (FuelSlot.mayPlaceItem(itemStack)) {
+                    if (this.moveItemStackTo(itemStack2, 4, 5, false) && !this.moveItemStackTo(itemStack2, 3, 4, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (PotionSlot.mayPlaceItem(itemStack)) {
+                    if (!this.moveItemStackTo(itemStack2, 0, 3, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index >= 5 && index < 32) {
+                    if (!this.moveItemStackTo(itemStack2, 32, 41, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (index >= 32 && index < 41) {
+                    if (!this.moveItemStackTo(itemStack2, 5, 32, false)) {
+                        return ItemStack.EMPTY;
+                    }
+                } else if (!this.moveItemStackTo(itemStack2, 5, 41, false)) {
                     return ItemStack.EMPTY;
                 }
             } else {
-                if (originalStack.getItem() == ObjectRegistry.HERBAL_INFUSION.get()) {
-                    if (!this.moveItemStackTo(originalStack, 4, 5, false)) {
-                        return ItemStack.EMPTY;
-                    }
-            } else {
-                    for (int i = 0; i < 3; i++) {
-                        Slot inputSlot = this.slots.get(i);
-                        if (!inputSlot.hasItem()) {
-                            if (!this.moveItemStackTo(originalStack, i, i + 1, false)) {
-                                return ItemStack.EMPTY;
-                            }
-                        }
-                    }
+                if (!this.moveItemStackTo(itemStack2, 5, 41, true)) {
+                    return ItemStack.EMPTY;
                 }
+
+                slot.onQuickCraft(itemStack2, itemStack);
             }
-            if (originalStack.isEmpty()) {
-                slot.set(ItemStack.EMPTY);
+
+            if (itemStack2.isEmpty()) {
+                slot.setByPlayer(ItemStack.EMPTY);
             } else {
                 slot.setChanged();
             }
+
+            if (itemStack2.getCount() == itemStack.getCount()) {
+                return ItemStack.EMPTY;
+            }
+
+            slot.onTake(player, itemStack);
         }
-        return stack;
+
+        return itemStack;
     }
 
     public int getCookingTime() {
@@ -123,5 +123,48 @@ public class CauldronGuiHandler extends AbstractContainerMenu {
     @Override
     public boolean stillValid(Player player) {
         return container.stillValid(player);
+    }
+
+    private static class PotionSlot extends Slot{
+
+        public PotionSlot(Container container, int i, int j, int k) {
+            super(container, i, j, k);
+        }
+
+        public boolean mayPlace(ItemStack itemStack) {
+            return mayPlaceItem(itemStack);
+        }
+
+        public int getMaxStackSize() {
+            return 1;
+        }
+
+        public void onTake(Player player, ItemStack itemStack) {
+            Potion potion = PotionUtils.getPotion(itemStack);
+            if (player instanceof ServerPlayer) {
+                CriteriaTriggers.BREWED_POTION.trigger((ServerPlayer)player, potion);
+            }
+
+            super.onTake(player, itemStack);
+        }
+
+        public static boolean mayPlaceItem(ItemStack itemStack) {
+            return itemStack.getItem() instanceof PotionItem || itemStack.is(Items.POTION) || itemStack.is(Items.SPLASH_POTION) || itemStack.is(Items.LINGERING_POTION) || itemStack.is(Items.GLASS_BOTTLE);
+        }
+    }
+
+    private static class FuelSlot extends Slot {
+
+        public FuelSlot(Container container, int i, int j, int k) {
+            super(container, i, j, k);
+        }
+
+        public boolean mayPlace(ItemStack itemStack) {
+            return mayPlaceItem(itemStack);
+        }
+
+        public static boolean mayPlaceItem(ItemStack itemStack) {
+            return itemStack.is(ObjectRegistry.HERBAL_INFUSION.get());
+        }
     }
 }
