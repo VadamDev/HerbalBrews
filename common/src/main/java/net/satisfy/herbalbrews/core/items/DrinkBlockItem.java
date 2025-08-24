@@ -5,13 +5,10 @@ import com.mojang.datafixers.util.Pair;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.effect.MobEffectUtil;
 import net.minecraft.world.entity.LivingEntity;
@@ -27,10 +24,10 @@ import net.minecraft.world.item.component.ItemAttributeModifiers;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
+import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.UUID;
+import java.util.Map;
 
 public class DrinkBlockItem extends BlockItem {
 
@@ -51,26 +48,62 @@ public class DrinkBlockItem extends BlockItem {
         }
         FoodProperties foodProperties = stack.get(DataComponents.FOOD);
         if (foodProperties != null) {
-            foodProperties.effects().forEach(possibleEffect -> {
-                user.addEffect(possibleEffect.effect());
-            });
+            foodProperties.effects().forEach(possibleEffect -> user.addEffect(possibleEffect.effect()));
         }
         return super.finishUsingItem(stack, world, user);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext tooltipContext, List<Component> tooltip, TooltipFlag context) {
+        Map<ResourceLocation, MobEffectInstance> combined = new LinkedHashMap<>();
+
         PotionContents potionContents = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
         if (potionContents.hasEffects()) {
-            potionContents.forEachEffect(mobEffectInstance -> {
-                MutableComponent effectName = Component.translatable(mobEffectInstance.getDescriptionId());
-                if (mobEffectInstance.getDuration() > 20) {
-                    effectName = Component.translatable("potion.withDuration", effectName, MobEffectUtil.formatDuration(mobEffectInstance, 1.0f, 1.0f));
+            potionContents.forEachEffect(inst -> {
+                ResourceLocation id = BuiltInRegistries.MOB_EFFECT.getKey(inst.getEffect().value());
+                MobEffectInstance prev = combined.get(id);
+                if (prev == null) {
+                    combined.put(id, inst);
+                } else {
+                    int amp = Math.max(prev.getAmplifier(), inst.getAmplifier());
+                    int dur = Math.max(prev.getDuration(), inst.getDuration());
+                    boolean amb = prev.isAmbient() || inst.isAmbient();
+                    boolean vis = prev.isVisible() || inst.isVisible();
+                    boolean icon = prev.showIcon() || inst.showIcon();
+                    combined.put(id, new MobEffectInstance(prev.getEffect(), dur, amp, amb, vis, icon));
                 }
-                tooltip.add(effectName.withStyle(mobEffectInstance.getEffect().value().getCategory().getTooltipFormatting()));
             });
-        } else {
+        }
+
+        FoodProperties food = stack.get(DataComponents.FOOD);
+        if (food != null) {
+            for (FoodProperties.PossibleEffect e : food.effects()) {
+                MobEffectInstance inst = e.effect();
+                ResourceLocation id = BuiltInRegistries.MOB_EFFECT.getKey(inst.getEffect().value());
+                MobEffectInstance prev = combined.get(id);
+                if (prev == null) {
+                    combined.put(id, inst);
+                } else {
+                    int amp = Math.max(prev.getAmplifier(), inst.getAmplifier());
+                    int dur = Math.max(prev.getDuration(), inst.getDuration());
+                    boolean amb = prev.isAmbient() || inst.isAmbient();
+                    boolean vis = prev.isVisible() || inst.isVisible();
+                    boolean icon = prev.showIcon() || inst.showIcon();
+                    combined.put(id, new MobEffectInstance(prev.getEffect(), dur, amp, amb, vis, icon));
+                }
+            }
+        }
+
+        if (combined.isEmpty()) {
             tooltip.add(Component.translatable("effect.none").withStyle(ChatFormatting.GRAY));
+        } else {
+            for (MobEffectInstance inst : combined.values()) {
+                MutableComponent effectName = Component.translatable(inst.getDescriptionId());
+                if (inst.getDuration() > 20) {
+                    effectName = Component.translatable("potion.withDuration", effectName, MobEffectUtil.formatDuration(inst, 1.0f, 20.0f));
+                }
+                tooltip.add(effectName.withStyle(inst.getEffect().value().getCategory().getTooltipFormatting()));
+            }
         }
 
         List<Pair<Attribute, AttributeModifier>> attributeModifiers = Lists.newArrayList();
@@ -79,13 +112,10 @@ public class DrinkBlockItem extends BlockItem {
             itemAttributeModifiers.modifiers().forEach(entry -> {
                 Attribute attribute = entry.attribute().value();
                 double amount = entry.modifier().amount();
-                if (attribute != null) {
-                    AttributeModifier modifier = new AttributeModifier(entry.modifier().id(), amount, entry.modifier().operation());
-                    attributeModifiers.add(new Pair<>(attribute, modifier));
-                }
+                AttributeModifier modifier = new AttributeModifier(entry.modifier().id(), amount, entry.modifier().operation());
+                attributeModifiers.add(new Pair<>(attribute, modifier));
             });
         }
-
         if (!attributeModifiers.isEmpty()) {
             tooltip.add(Component.empty());
             tooltip.add(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));

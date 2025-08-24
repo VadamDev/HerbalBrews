@@ -5,5 +5,8 @@
   "ingredient": {
     "item": "herbalbrews:green_tea_leaf"
   },
-  "id": "minecraft:green_dye"
+  "result": {
+    "id": "minecraft:green_dye",
+    "count": 1
+  }
 }

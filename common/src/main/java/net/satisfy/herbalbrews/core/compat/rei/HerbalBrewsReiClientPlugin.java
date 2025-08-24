@@ -14,6 +14,7 @@ import net.satisfy.herbalbrews.core.compat.rei.display.TeaKettleDisplay;
 import net.satisfy.herbalbrews.core.recipe.CauldronRecipe;
 import net.satisfy.herbalbrews.core.recipe.TeaKettleRecipe;
 import net.satisfy.herbalbrews.core.registry.ObjectRegistry;
+import net.satisfy.herbalbrews.core.registry.RecipeTypeRegistry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,8 +32,16 @@ public class HerbalBrewsReiClientPlugin {
     }
 
     public static void registerDisplays(DisplayRegistry registry) {
-        registry.registerFiller(TeaKettleRecipe.class, TeaKettleDisplay::new);
-        registry.registerFiller(CauldronRecipe.class, CauldronDisplay::new);
+        registry.registerRecipeFiller(
+                TeaKettleRecipe.class,
+                RecipeTypeRegistry.TEA_KETTLE_RECIPE_TYPE.get(),
+                holder -> new TeaKettleDisplay(holder.value())
+        );
+        registry.registerRecipeFiller(
+                CauldronRecipe.class,
+                RecipeTypeRegistry.CAULDRON_RECIPE_TYPE.get(),
+                holder -> new CauldronDisplay(holder.value())
+        );
     }
 
     public static List<Ingredient> ingredients(Recipe<RecipeInput> recipe, ItemStack stack){
