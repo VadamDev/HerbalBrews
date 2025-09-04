@@ -1,12 +1,11 @@
 package net.satisfy.herbalbrews.core.blocks;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -27,9 +26,6 @@ import net.satisfy.herbalbrews.core.registry.EntityTypeRegistry;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
-
-@SuppressWarnings("deprecation")
 public class TeaCupBlock extends Block implements EntityBlock {
     public static final EnumProperty<Direction> FACING = BlockStateProperties.HORIZONTAL_FACING;
     private static final VoxelShape SHAPE = Shapes.box(0.125, 0, 0.125, 0.875, 0.875, 0.875);
@@ -43,11 +39,11 @@ public class TeaCupBlock extends Block implements EntityBlock {
     public void setPlacedBy(Level world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer, stack);
         if (stack.has(DataComponents.POTION_CONTENTS)) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
+            BlockEntity be = world.getBlockEntity(pos);
+            if (be instanceof DrinkBlockEntity drink) {
                 PotionContents data = stack.getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY);
-                drinkBlockEntity.setComponents(DataComponentMap.builder().set(DataComponents.POTION_CONTENTS, data).build());
-                blockEntity.setChanged();
+                drink.setComponents(DataComponentMap.builder().set(DataComponents.POTION_CONTENTS, data).build());
+                be.setChanged();
             }
         }
     }
@@ -74,24 +70,26 @@ public class TeaCupBlock extends Block implements EntityBlock {
     }
 
     @Override
-    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean isMoving) {
-        if (!state.is(newState.getBlock())) {
-            BlockEntity blockEntity = world.getBlockEntity(pos);
-            if (blockEntity instanceof DrinkBlockEntity drinkBlockEntity) {
-                ItemStack stack = new ItemStack(this);
-                if (drinkBlockEntity.components() != null && !drinkBlockEntity.components().isEmpty()) {
-                    stack.set(DataComponents.POTION_CONTENTS, drinkBlockEntity.components().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY));
-                }
-                // @author wdog5 - fix player when creative mode still drop resource
-                LocalPlayer player = Minecraft.getInstance().player;
-                if (player != null && !player.getAbilities().instabuild) {
-                    popResource(world, pos, stack);
-                }
-                // @author wdog5 end
+    public void playerDestroy(Level level, Player player, BlockPos pos, BlockState state, @Nullable BlockEntity be, ItemStack tool) {
+        if (be instanceof DrinkBlockEntity drink && !player.getAbilities().instabuild) {
+            ItemStack stack = new ItemStack(this.asItem());
+            drink.components();
+            if (!drink.components().isEmpty()) {
+                stack.set(DataComponents.POTION_CONTENTS, drink.components().getOrDefault(DataComponents.POTION_CONTENTS, PotionContents.EMPTY));
             }
-            super.onRemove(state, world, pos, newState, isMoving);
+            popResource(level, pos, stack);
         }
+        super.playerDestroy(level, player, pos, state, be, tool);
     }
 
-
+    @Override
+    public void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean isMoving) {
+        if (!state.is(newState.getBlock())) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be instanceof DrinkBlockEntity) {
+                level.removeBlockEntity(pos);
+            }
+            super.onRemove(state, level, pos, newState, isMoving);
+        }
+    }
 }
