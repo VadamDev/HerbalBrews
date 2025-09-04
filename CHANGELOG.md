@@ -3,6 +3,7 @@
 **Fixed**
 * TeaCupBlock no longer crashes on dedicated servers by removing client-only class references
 * Corrected block destruction handling to ensure potion contents drop properly outside Creative mode
+* All flower loot tables unified with vanilla grass-style logic (normal drop = flower, with shears = tea_blossom)
 
 ***
 
