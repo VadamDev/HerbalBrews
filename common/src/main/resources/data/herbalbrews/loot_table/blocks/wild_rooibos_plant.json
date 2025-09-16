@@ -16,22 +16,22 @@
                     {
                       "condition": "minecraft:match_tool",
                       "predicate": {
-                        "items": [
-                          "minecraft:shears"
-                        ]
+                        "items": "minecraft:shears"
                       }
                     },
                     {
                       "condition": "minecraft:match_tool",
                       "predicate": {
-                        "enchantments": [
-                          {
-                            "enchantment": "minecraft:silk_touch",
-                            "levels": {
-                              "min": 1
+                        "predicates": {
+                          "minecraft:enchantments": [
+                            {
+                              "enchantments": "minecraft:silk_touch",
+                              "levels": {
+                                "min": 1
+                              }
                             }
-                          }
-                        ]
+                          ]
+                        }
                       }
                     }
                   ]
@@ -46,14 +46,14 @@
                   "condition": "minecraft:survives_explosion"
                 },
                 {
+                  "condition": "minecraft:table_bonus",
+                  "enchantment": "minecraft:fortune",
                   "chances": [
                     0.05,
                     0.0625,
                     0.083333336,
                     0.1
-                  ],
-                  "condition": "minecraft:table_bonus",
-                  "enchantment": "minecraft:fortune"
+                  ]
                 }
               ],
               "name": "herbalbrews:wild_rooibos_plant"
@@ -74,22 +74,22 @@
               {
                 "condition": "minecraft:match_tool",
                 "predicate": {
-                  "items": [
-                    "minecraft:shears"
-                  ]
+                  "items": "minecraft:shears"
                 }
               },
               {
                 "condition": "minecraft:match_tool",
                 "predicate": {
-                  "enchantments": [
-                    {
-                      "enchantment": "minecraft:silk_touch",
-                      "levels": {
-                        "min": 1
+                  "predicates": {
+                    "minecraft:enchantments": [
+                      {
+                        "enchantments": "minecraft:silk_touch",
+                        "levels": {
+                          "min": 1
+                        }
                       }
-                    }
-                  ]
+                    ]
+                  }
                 }
               }
             ]
@@ -101,22 +101,22 @@
           "type": "minecraft:item",
           "conditions": [
             {
+              "condition": "minecraft:table_bonus",
+              "enchantment": "minecraft:fortune",
               "chances": [
                 1.0
-              ],
-              "condition": "minecraft:table_bonus",
-              "enchantment": "minecraft:fortune"
+              ]
             }
           ],
           "functions": [
             {
+              "function": "minecraft:set_count",
               "add": false,
               "count": {
                 "type": "minecraft:uniform",
-                "max": 1.0,
-                "min": 1.0
-              },
-              "function": "minecraft:set_count"
+                "min": 1.0,
+                "max": 1.0
+              }
             },
             {
               "function": "minecraft:explosion_decay"
@@ -127,6 +127,5 @@
       ],
       "rolls": 1.0
     }
-  ],
-  "random_sequence": "minecraft:blocks/birch_leaves"
+  ]
 }

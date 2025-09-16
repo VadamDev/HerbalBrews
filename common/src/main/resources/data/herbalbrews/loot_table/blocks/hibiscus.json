@@ -12,9 +12,7 @@
               "conditions": [
                 {
                   "condition": "minecraft:match_tool",
-                  "predicate": {
-                    "items": "minecraft:shears"
-                  }
+                  "predicate": { "items": "minecraft:shears" }
                 }
               ],
               "name": "herbalbrews:tea_blossom"
@@ -25,14 +23,14 @@
                 {
                   "condition": "minecraft:match_tool",
                   "predicate": {
-                    "enchantments": [
-                      {
-                        "enchantment": "minecraft:silk_touch",
-                        "levels": {
-                          "min": 1
+                    "predicates": {
+                      "minecraft:enchantments": [
+                        {
+                          "enchantments": "minecraft:silk_touch",
+                          "levels": { "min": 1 }
                         }
-                      }
-                    ]
+                      ]
+                    }
                   }
                 }
               ],
@@ -41,26 +39,17 @@
             {
               "type": "minecraft:item",
               "conditions": [
-                {
-                  "condition": "minecraft:survives_explosion"
-                },
-                {
-                  "condition": "minecraft:random_chance",
-                  "chance": 0.05
-                }
+                { "condition": "minecraft:survives_explosion" },
+                { "condition": "minecraft:random_chance", "chance": 0.05 }
               ],
               "functions": [
                 {
                   "function": "minecraft:apply_bonus",
                   "enchantment": "minecraft:fortune",
                   "formula": "minecraft:uniform_bonus_count",
-                  "parameters": {
-                    "bonusMultiplier": 1
-                  }
+                  "parameters": { "bonusMultiplier": 1 }
                 },
-                {
-                  "function": "minecraft:explosion_decay"
-                }
+                { "function": "minecraft:explosion_decay" }
               ],
               "name": "herbalbrews:tea_blossom"
             }
@@ -79,21 +68,19 @@
             "terms": [
               {
                 "condition": "minecraft:match_tool",
-                "predicate": {
-                  "items": "minecraft:shears"
-                }
+                "predicate": { "items": "minecraft:shears" }
               },
               {
                 "condition": "minecraft:match_tool",
                 "predicate": {
-                  "enchantments": [
-                    {
-                      "enchantment": "minecraft:silk_touch",
-                      "levels": {
-                        "min": 1
+                  "predicates": {
+                    "minecraft:enchantments": [
+                      {
+                        "enchantments": "minecraft:silk_touch",
+                        "levels": { "min": 1 }
                       }
-                    }
-                  ]
+                    ]
+                  }
                 }
               }
             ]
@@ -105,9 +92,7 @@
           "type": "minecraft:item",
           "name": "herbalbrews:hibiscus",
           "functions": [
-            {
-              "function": "minecraft:explosion_decay"
-            }
+            { "function": "minecraft:explosion_decay" }
           ]
         }
       ],

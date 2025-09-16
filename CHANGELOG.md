@@ -1,3 +1,11 @@
+[1.1.2]
+
+**Fixed**
+* Loot tables for `wild_coffee`, `wild_rooibos`, `wild_yerba_mate`, `hibiscus`, `lavender` now properly drop the plant when harvested with Shears or Silk Touch
+* StoveBlock crash on place/load 
+
+***
+
 [1.1.1]
 
 **Fixed**
